@@ -1,0 +1,41 @@
+{
+  "strong_overexposure": {
+    "label": "Overexposure +1.5 EV", "kind": "exposure", "ev": 1.5,
+    "group": "overexposure_bloom", "group_label": "Overexposure and bloom"
+  },
+  "highlight_bloom": {
+    "label": "Strong highlight bloom", "kind": "optical", "effect": "bloom",
+    "strength": 1.0, "ev": 0.55, "color": [1.0, 0.93, 0.82],
+    "bloom_threshold": 0.5, "bloom_radius": 0.035, "bloom_strength": 1.65,
+    "group": "overexposure_bloom", "group_label": "Overexposure and bloom"
+  },
+  "sun_glare": {
+    "label": "Warm sun glare", "kind": "optical", "effect": "glare",
+    "strength": 1.0, "ev": -0.1, "source": [0.12, 0.10],
+    "color": [1.0, 0.82, 0.56], "radius": 0.68,
+    "veil": 0.52, "core": 3.2, "rays": 0.04,
+    "group": "glare_flare", "group_label": "Sun glare and lens flare"
+  },
+  "lens_flare": {
+    "label": "Lens flare and ghosts", "kind": "optical", "effect": "flare",
+    "strength": 1.0, "ev": -0.15, "source": [0.83, 0.13],
+    "color": [1.0, 0.86, 0.65], "radius": 0.5,
+    "veil": 0.30, "core": 4.5, "rays": 0.35, "ghosts": 0.55,
+    "group": "glare_flare", "group_label": "Sun glare and lens flare"
+  },
+  "warm_backlight": {
+    "label": "Warm backlight", "kind": "optical", "effect": "backlight",
+    "strength": 1.0, "ev": -1.7, "source": [0.79, 0.16],
+    "color": [1.0, 0.57, 0.24], "radius": 0.52,
+    "veil": 0.22, "core": 4.5, "rays": 0.06,
+    "bloom_threshold": 0.24, "bloom_radius": 0.025, "bloom_strength": 0.12,
+    "group": "backlight", "group_label": "Warm and cool backlight"
+  },
+  "cool_backlight": {
+    "label": "Cool backlight", "kind": "optical", "effect": "backlight",
+    "strength": 1.0, "ev": -1.7, "source": [0.14, 0.12],
+    "color": [0.52, 0.74, 1.0], "radius": 0.50,
+    "veil": 0.18, "core": 3.8, "rays": 0.05,
+    "group": "backlight", "group_label": "Warm and cool backlight"
+  }
+}

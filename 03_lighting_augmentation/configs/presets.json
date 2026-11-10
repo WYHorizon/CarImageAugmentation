@@ -1,0 +1,34 @@
+{
+  "exposure_down": {
+    "label": "Exposure -0.3 EV",
+    "kind": "exposure",
+    "ev": -0.3
+  },
+  "exposure_up": {
+    "label": "Exposure +0.3 EV",
+    "kind": "exposure",
+    "ev": 0.3
+  },
+  "contrast_low": {
+    "label": "Contrast 0.9",
+    "kind": "contrast",
+    "factor": 0.9,
+    "pivot": 0.18
+  },
+  "contrast_high": {
+    "label": "Contrast 1.1",
+    "kind": "contrast",
+    "factor": 1.1,
+    "pivot": 0.18
+  },
+  "warm": {
+    "label": "Warm white balance",
+    "kind": "white_balance",
+    "gains": [1.05, 1.0, 0.95]
+  },
+  "cool": {
+    "label": "Cool white balance",
+    "kind": "white_balance",
+    "gains": [0.95, 1.0, 1.05]
+  }
+}

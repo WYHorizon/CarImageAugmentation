@@ -15,6 +15,28 @@
 
 Qwen 当前未接入 ControlNet，场景配置中的部件区域用于裁剪对照，不作为生成时的结构约束。SDXL + ControlNet + IP-Adapter 暂缓部署，判别部件保真控制仍是待验证的研究方案。
 
+## 效果对比
+
+以下总览直接复制自已有实验预览，随仓库保存在 `docs/assets/`，可在 GitHub 上直接查看。两张图从上到下均为**奥迪 A6L、宝马 4 系、小米 YU7、本田 CR-V**，每行第一列为原图对照。
+
+### 物理方法：阴天湿地与降雨
+
+从左到右：**原图 → 阴天湿地 → 阴天湿地中雨 → 阴天湿地大雨**。
+
+![物理天气增强：四辆车的原图、阴天湿地、湿地中雨和湿地大雨对比](docs/assets/physics-overcast-wet-overview.jpg)
+
+[查看物理方法大图](docs/assets/physics-overcast-wet-overview.jpg)。车辆沿用原图结构，雨丝与空气散射随预设增强，但车身仍保留部分晴天反射，阴天照明和路面反射为程序化近似。来源：`01_physics_based/outputs/overcast_wet_v3/previews/overview.jpg`。
+
+### Qwen：四类天气编辑
+
+从左到右：**原图 → 阴天湿路 → 中雨 → 薄雾 → 降雪与部分积雪**。原图列使用缩至工作分辨率的 `source_working.png`。
+
+![Qwen 天气编辑：四辆车的原图、阴天湿路、中雨、薄雾和降雪与部分积雪对比](docs/assets/qwen-weather-overview.jpg)
+
+[查看 Qwen 大图](docs/assets/qwen-weather-overview.jpg)。阴天光照、湿地反光、雾化和积雪变化可见，但局部部件仍有重绘损失；小米雪景还出现了原图没有的前景黄色标线。来源：`02_qwen_image_edit/outputs/weather_batch_v2/report/overview.jpg`。
+
+以上均为缩略总览。物理方法原生输出为 3840×2880，Qwen 去边框输出为 2388×1791；两组天气设置与视觉强度未统一标定，仅用于定性展示。细粒度保真仍需结合原生分辨率部件裁剪检查。
+
 ## 目录结构
 
 ```text
@@ -22,6 +44,7 @@ CarImageAugmentation/
 ├── README.md                         # 项目介绍与运行入口
 ├── docs/                             # 方法说明、实验记录与研究方案
 │   ├── README.md                     # 完整文档索引
+│   ├── assets/                       # 随仓库提交的效果对比预览图
 │   ├── 01_physics_based.md
 │   ├── 01_physics_results.md
 │   ├── 02_qwen_image_edit.md
@@ -49,7 +72,7 @@ CarImageAugmentation/
     └── outputs/                      # 本地生成结果，不纳入 Git
 ```
 
-仓库包含代码、配置、文档和测试原图。`models/`、各方法的 `outputs/`、Python 缓存与虚拟环境由 `.gitignore` 排除，克隆后需另行准备权重并生成结果。详细文档中的历史结果图片链接仅在对应本地输出存在时可用。
+仓库包含代码、配置、文档、测试原图及 `docs/assets/` 中的精选预览图。`models/`、各方法的 `outputs/`、Python 缓存与虚拟环境由 `.gitignore` 排除，克隆后需另行准备权重并生成完整结果。README 中的精选预览可直接浏览；详细文档中指向历史 `outputs/` 的图片链接仍需对应本地输出。
 
 ## 获取项目
 

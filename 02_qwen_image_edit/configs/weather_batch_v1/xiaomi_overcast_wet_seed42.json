@@ -1,0 +1,16 @@
+{
+  "input_image": "test_images/小米YU7.jpg",
+  "model_dir": "models/Qwen-Image-2.1",
+  "model_revision": "d26bb61231c349cf6b7896fa83353113880e1ba3",
+  "scene_config": "01_physics_based/configs/scenes.json",
+  "width": 2400,
+  "height": 1792,
+  "seed": 42,
+  "num_inference_steps": 40,
+  "true_cfg_scale": 1.0,
+  "use_kv_cache": true,
+  "vae_tiling": false,
+  "prompt": "将这张照片编辑为刚下过雨的阴天场景。保持原机位、构图、车辆位置与比例，保持同一辆车及其基本漆色。让天空、建筑、车漆和玻璃受到一致的阴天漫射光照，移除明显直射阳光观感；道路湿润，有符合粗糙路面材质的克制反光。允许车漆和玻璃中的环境反射随天气改变。精确保留车灯内部灯带、格栅布局、车标、轮毂辐条、车身折线及窗框。画面中没有正在下落的雨丝，不增加积雪，不增加车辆或物体。",
+  "weather_id": "overcast_wet",
+  "weather_label": "Overcast + wet road"
+}

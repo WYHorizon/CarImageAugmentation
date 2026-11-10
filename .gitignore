@@ -1,0 +1,15 @@
+# Shared model weights and generated experiment artifacts
+/models/
+outputs/
+
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Local credentials and environment variables
+.env
+.env.*
+!.env.example

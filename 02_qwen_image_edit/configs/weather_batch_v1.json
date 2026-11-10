@@ -1,0 +1,126 @@
+{
+  "batch_id": "weather_batch_v1",
+  "description": "Four original vehicles, overcast wet / moderate rain / light fog; seed 42, 40 steps. One existing result reused, eleven new generations.",
+  "jobs": [
+    {
+      "id": "audi_overcast_wet",
+      "vehicle_id": "audi",
+      "vehicle_label": "Audi A6L",
+      "weather_id": "overcast_wet",
+      "weather_label": "Overcast + wet road",
+      "config": "02_qwen_image_edit/configs/audi_overcast_wet_seed42.json",
+      "output_dir": "02_qwen_image_edit/outputs/audi_overcast_wet_seed42_2k_retry01",
+      "reuse": true
+    },
+    {
+      "id": "bmw_overcast_wet",
+      "vehicle_id": "bmw",
+      "vehicle_label": "BMW 4 Series",
+      "weather_id": "overcast_wet",
+      "weather_label": "Overcast + wet road",
+      "config": "02_qwen_image_edit/configs/weather_batch_v1/bmw_overcast_wet_seed42.json",
+      "output_dir": "02_qwen_image_edit/outputs/weather_batch_v1/runs/bmw_overcast_wet",
+      "reuse": false
+    },
+    {
+      "id": "xiaomi_overcast_wet",
+      "vehicle_id": "xiaomi",
+      "vehicle_label": "Xiaomi YU7",
+      "weather_id": "overcast_wet",
+      "weather_label": "Overcast + wet road",
+      "config": "02_qwen_image_edit/configs/weather_batch_v1/xiaomi_overcast_wet_seed42.json",
+      "output_dir": "02_qwen_image_edit/outputs/weather_batch_v1/runs/xiaomi_overcast_wet",
+      "reuse": false
+    },
+    {
+      "id": "honda_overcast_wet",
+      "vehicle_id": "honda",
+      "vehicle_label": "Honda CR-V",
+      "weather_id": "overcast_wet",
+      "weather_label": "Overcast + wet road",
+      "config": "02_qwen_image_edit/configs/weather_batch_v1/honda_overcast_wet_seed42.json",
+      "output_dir": "02_qwen_image_edit/outputs/weather_batch_v1/runs/honda_overcast_wet",
+      "reuse": false
+    },
+    {
+      "id": "audi_rain_medium",
+      "vehicle_id": "audi",
+      "vehicle_label": "Audi A6L",
+      "weather_id": "rain_medium",
+      "weather_label": "Moderate rain",
+      "config": "02_qwen_image_edit/configs/weather_batch_v1/audi_rain_medium_seed42.json",
+      "output_dir": "02_qwen_image_edit/outputs/weather_batch_v1/runs/audi_rain_medium",
+      "reuse": false
+    },
+    {
+      "id": "bmw_rain_medium",
+      "vehicle_id": "bmw",
+      "vehicle_label": "BMW 4 Series",
+      "weather_id": "rain_medium",
+      "weather_label": "Moderate rain",
+      "config": "02_qwen_image_edit/configs/weather_batch_v1/bmw_rain_medium_seed42.json",
+      "output_dir": "02_qwen_image_edit/outputs/weather_batch_v1/runs/bmw_rain_medium",
+      "reuse": false
+    },
+    {
+      "id": "xiaomi_rain_medium",
+      "vehicle_id": "xiaomi",
+      "vehicle_label": "Xiaomi YU7",
+      "weather_id": "rain_medium",
+      "weather_label": "Moderate rain",
+      "config": "02_qwen_image_edit/configs/weather_batch_v1/xiaomi_rain_medium_seed42.json",
+      "output_dir": "02_qwen_image_edit/outputs/weather_batch_v1/runs/xiaomi_rain_medium",
+      "reuse": false
+    },
+    {
+      "id": "honda_rain_medium",
+      "vehicle_id": "honda",
+      "vehicle_label": "Honda CR-V",
+      "weather_id": "rain_medium",
+      "weather_label": "Moderate rain",
+      "config": "02_qwen_image_edit/configs/weather_batch_v1/honda_rain_medium_seed42.json",
+      "output_dir": "02_qwen_image_edit/outputs/weather_batch_v1/runs/honda_rain_medium",
+      "reuse": false
+    },
+    {
+      "id": "audi_fog_light",
+      "vehicle_id": "audi",
+      "vehicle_label": "Audi A6L",
+      "weather_id": "fog_light",
+      "weather_label": "Light fog",
+      "config": "02_qwen_image_edit/configs/weather_batch_v1/audi_fog_light_seed42.json",
+      "output_dir": "02_qwen_image_edit/outputs/weather_batch_v1/runs/audi_fog_light",
+      "reuse": false
+    },
+    {
+      "id": "bmw_fog_light",
+      "vehicle_id": "bmw",
+      "vehicle_label": "BMW 4 Series",
+      "weather_id": "fog_light",
+      "weather_label": "Light fog",
+      "config": "02_qwen_image_edit/configs/weather_batch_v1/bmw_fog_light_seed42.json",
+      "output_dir": "02_qwen_image_edit/outputs/weather_batch_v1/runs/bmw_fog_light",
+      "reuse": false
+    },
+    {
+      "id": "xiaomi_fog_light",
+      "vehicle_id": "xiaomi",
+      "vehicle_label": "Xiaomi YU7",
+      "weather_id": "fog_light",
+      "weather_label": "Light fog",
+      "config": "02_qwen_image_edit/configs/weather_batch_v1/xiaomi_fog_light_seed42.json",
+      "output_dir": "02_qwen_image_edit/outputs/weather_batch_v1/runs/xiaomi_fog_light",
+      "reuse": false
+    },
+    {
+      "id": "honda_fog_light",
+      "vehicle_id": "honda",
+      "vehicle_label": "Honda CR-V",
+      "weather_id": "fog_light",
+      "weather_label": "Light fog",
+      "config": "02_qwen_image_edit/configs/weather_batch_v1/honda_fog_light_seed42.json",
+      "output_dir": "02_qwen_image_edit/outputs/weather_batch_v1/runs/honda_fog_light",
+      "reuse": false
+    }
+  ]
+}

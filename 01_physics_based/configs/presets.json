@@ -1,0 +1,214 @@
+{
+  "fog_light": {
+    "kind": "fog",
+    "beta_per_m": 0.012,
+    "description": "追加薄雾，保留原有照明"
+  },
+  "fog_medium": {
+    "kind": "fog",
+    "beta_per_m": 0.026,
+    "description": "追加较明显的雾，近车仍保留较高透射率"
+  },
+  "rain_light": {
+    "kind": "rain",
+    "beta_per_m": 0.0005,
+    "particle_density_per_m3": 6.0,
+    "shutter_seconds": 0.004,
+    "fall_speed_mps": 6.5,
+    "wind_mps": 0.8,
+    "drop_diameter_mm": [
+      1.0,
+      2.0
+    ],
+    "opacity_scale": 1.0,
+    "radiance_linear": [
+      0.9,
+      0.94,
+      0.98
+    ],
+    "description": "保持现有日照的短暂小雨/太阳雨；无积水、湿润材质或云层重建"
+  },
+  "rain_medium": {
+    "kind": "rain",
+    "beta_per_m": 0.003,
+    "particle_density_per_m3": 20.0,
+    "max_rain_depth_m": 18.0,
+    "shutter_seconds": 0.008,
+    "fall_speed_mps": 7.0,
+    "wind_mps": 1.2,
+    "wind_jitter_mps": 0.3,
+    "drop_diameter_mm": [
+      1.2,
+      2.7
+    ],
+    "opacity_scale": 1.0,
+    "radiance_linear": [
+      3.0,
+      3.2,
+      3.4
+    ],
+    "description": "中等视觉强度降雨：更密集的可见雨丝与轻微雨幕；HDR 雨滴亮度为近似参数，非实测雨量"
+  },
+  "rain_heavy": {
+    "kind": "rain",
+    "beta_per_m": 0.008,
+    "particle_density_per_m3": 55.0,
+    "max_rain_depth_m": 20.0,
+    "shutter_seconds": 0.012,
+    "fall_speed_mps": 8.0,
+    "wind_mps": 2.0,
+    "wind_jitter_mps": 0.6,
+    "drop_diameter_mm": [
+      1.5,
+      3.5
+    ],
+    "opacity_scale": 1.0,
+    "radiance_linear": [
+      6.0,
+      6.3,
+      6.6
+    ],
+    "description": "较强视觉降雨：密集较长雨丝、更明显的雨幕；保留原场景照明，非标定大雨场景"
+  },
+  "overcast_wet": {
+    "kind": "fog",
+    "beta_per_m": 0,
+    "surface_weather": {
+      "overcast": {
+        "exposure": 0.7,
+        "vehicle_gain_bounds": [
+          0.74,
+          1.08
+        ],
+        "white_balance": [
+          0.96,
+          1.0,
+          1.035
+        ],
+        "remaining_direct_fraction": 0.08,
+        "sky_srgb": [
+          0.62,
+          0.65,
+          0.69
+        ],
+        "sky_strength": 0.5
+      },
+      "wet_road": {
+        "wetness": 0.92,
+        "diffuse_retention": 0.68,
+        "reflection_strength": 0.88,
+        "reflection_blur_ratio": 0.0035,
+        "water_ior": 1.333
+      }
+    },
+    "description": "阴天漫射照明近似与湿路面，不含降水；车辆仅作受限 RGB 增益变化"
+  },
+  "rain_overcast_wet_medium": {
+    "kind": "rain",
+    "beta_per_m": 0.003,
+    "particle_density_per_m3": 20.0,
+    "max_rain_depth_m": 18.0,
+    "shutter_seconds": 0.008,
+    "fall_speed_mps": 7.0,
+    "wind_mps": 1.2,
+    "wind_jitter_mps": 0.3,
+    "drop_diameter_mm": [
+      1.2,
+      2.7
+    ],
+    "opacity_scale": 1.0,
+    "radiance_linear": [
+      1.5,
+      1.65,
+      1.8
+    ],
+    "description": "阴天与湿路面近似 + 中等视觉降雨；非完整逆渲染，非标定雨量",
+    "surface_weather": {
+      "overcast": {
+        "exposure": 0.7,
+        "vehicle_gain_bounds": [
+          0.74,
+          1.08
+        ],
+        "white_balance": [
+          0.96,
+          1.0,
+          1.035
+        ],
+        "remaining_direct_fraction": 0.08,
+        "sky_srgb": [
+          0.62,
+          0.65,
+          0.69
+        ],
+        "sky_strength": 0.5
+      },
+      "wet_road": {
+        "wetness": 0.92,
+        "diffuse_retention": 0.68,
+        "reflection_strength": 0.88,
+        "reflection_blur_ratio": 0.0035,
+        "water_ior": 1.333
+      }
+    },
+    "airlight_srgb": [
+      0.65,
+      0.68,
+      0.72
+    ]
+  },
+  "rain_overcast_wet_heavy": {
+    "kind": "rain",
+    "beta_per_m": 0.008,
+    "particle_density_per_m3": 55.0,
+    "max_rain_depth_m": 20.0,
+    "shutter_seconds": 0.012,
+    "fall_speed_mps": 8.0,
+    "wind_mps": 2.0,
+    "wind_jitter_mps": 0.6,
+    "drop_diameter_mm": [
+      1.5,
+      3.5
+    ],
+    "opacity_scale": 1.0,
+    "radiance_linear": [
+      2.4,
+      2.6,
+      2.8
+    ],
+    "description": "阴天与湿路面近似 + 较强视觉降雨；非完整逆渲染，非标定雨量",
+    "surface_weather": {
+      "overcast": {
+        "exposure": 0.7,
+        "vehicle_gain_bounds": [
+          0.74,
+          1.08
+        ],
+        "white_balance": [
+          0.96,
+          1.0,
+          1.035
+        ],
+        "remaining_direct_fraction": 0.08,
+        "sky_srgb": [
+          0.62,
+          0.65,
+          0.69
+        ],
+        "sky_strength": 0.5
+      },
+      "wet_road": {
+        "wetness": 0.92,
+        "diffuse_retention": 0.68,
+        "reflection_strength": 0.88,
+        "reflection_blur_ratio": 0.0035,
+        "water_ior": 1.333
+      }
+    },
+    "airlight_srgb": [
+      0.65,
+      0.68,
+      0.72
+    ]
+  }
+}

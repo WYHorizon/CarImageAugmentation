@@ -1,0 +1,16 @@
+{
+  "input_image": "test_images/本田CR-V.jpg",
+  "model_dir": "models/Qwen-Image-2.1",
+  "model_revision": "d26bb61231c349cf6b7896fa83353113880e1ba3",
+  "scene_config": "01_physics_based/configs/scenes.json",
+  "width": 2400,
+  "height": 1792,
+  "seed": 42,
+  "num_inference_steps": 40,
+  "true_cfg_scale": 1.0,
+  "use_kv_cache": true,
+  "vae_tiling": false,
+  "prompt": "将这张照片编辑为有薄雾的阴天场景。保持原机位、构图、车辆位置与比例，保持同一辆车及其基本漆色。雾气自然分布在环境中，远处建筑和树木随距离降低对比度，近处汽车保持清晰可辨，不让浓雾遮住车灯、格栅和轮毂。天空、环境、车漆和玻璃受到一致的柔和漫射光照，移除明显直射阳光观感。道路保持原有干燥材质，不添加积水或镜面倒影；车漆和玻璃保持自然平滑的材质，不出现密集颗粒噪点。允许环境反射随天气改变。精确保留车灯内部灯带、格栅布局、车标、轮毂辐条、车身折线及窗框，保持车牌文字和原有标识。不添加雨丝、雪花或积雪，不增加车辆或物体，不改变车辆设计。",
+  "weather_id": "fog_light",
+  "weather_label": "Light fog"
+}

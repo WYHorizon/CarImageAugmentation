@@ -1,0 +1,11 @@
+# Python 3.12; use the existing car-weather-qwen21 environment.
+torch==2.7.1+cu118
+torchvision==0.22.1+cu118
+diffusers==0.42.1
+transformers==5.22.2
+accelerate==1.15.0
+safetensors==0.8.0
+huggingface-hub==2.4.0
+socksio==1.0.0
+Pillow==13.0.0
+numpy==2.5.4

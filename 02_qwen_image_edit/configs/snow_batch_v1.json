@@ -1,0 +1,46 @@
+{
+  "batch_id": "snow_batch_v1",
+  "description": "Four original vehicles with falling snow and partial accumulation; seed 42, 40 steps, same geometry as weather_batch_v1.",
+  "jobs": [
+    {
+      "id": "audi_snow_partial",
+      "vehicle_id": "audi",
+      "vehicle_label": "Audi A6L",
+      "weather_id": "snow_partial",
+      "weather_label": "Snow + partial cover",
+      "config": "02_qwen_image_edit/configs/snow_batch_v1/audi_snow_partial_seed42.json",
+      "output_dir": "02_qwen_image_edit/outputs/snow_batch_v1/runs/audi_snow_partial",
+      "reuse": false
+    },
+    {
+      "id": "bmw_snow_partial",
+      "vehicle_id": "bmw",
+      "vehicle_label": "BMW 4 Series",
+      "weather_id": "snow_partial",
+      "weather_label": "Snow + partial cover",
+      "config": "02_qwen_image_edit/configs/snow_batch_v1/bmw_snow_partial_seed42.json",
+      "output_dir": "02_qwen_image_edit/outputs/snow_batch_v1/runs/bmw_snow_partial",
+      "reuse": false
+    },
+    {
+      "id": "xiaomi_snow_partial",
+      "vehicle_id": "xiaomi",
+      "vehicle_label": "Xiaomi YU7",
+      "weather_id": "snow_partial",
+      "weather_label": "Snow + partial cover",
+      "config": "02_qwen_image_edit/configs/snow_batch_v1/xiaomi_snow_partial_seed42.json",
+      "output_dir": "02_qwen_image_edit/outputs/snow_batch_v1/runs/xiaomi_snow_partial",
+      "reuse": false
+    },
+    {
+      "id": "honda_snow_partial",
+      "vehicle_id": "honda",
+      "vehicle_label": "Honda CR-V",
+      "weather_id": "snow_partial",
+      "weather_label": "Snow + partial cover",
+      "config": "02_qwen_image_edit/configs/snow_batch_v1/honda_snow_partial_seed42.json",
+      "output_dir": "02_qwen_image_edit/outputs/snow_batch_v1/runs/honda_snow_partial",
+      "reuse": false
+    }
+  ]
+}

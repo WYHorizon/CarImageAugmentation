@@ -1,0 +1,66 @@
+{
+  "defocus_mild": {
+    "label": "Defocus: mild",
+    "kind": "defocus",
+    "sigma": 2.0,
+    "reference_short_edge": 960,
+    "group": "blur",
+    "group_label": "Blur"
+  },
+  "defocus_strong": {
+    "label": "Defocus: strong",
+    "kind": "defocus",
+    "sigma": 4.0,
+    "reference_short_edge": 960,
+    "group": "blur",
+    "group_label": "Blur"
+  },
+  "motion_strong": {
+    "label": "Motion: strong",
+    "kind": "motion",
+    "length": 30.0,
+    "angle": 15.0,
+    "reference_short_edge": 960,
+    "group": "blur",
+    "group_label": "Blur"
+  },
+  "coarse_noise": {
+    "label": "Coarse noise: strong",
+    "kind": "noise",
+    "peak": 24.0,
+    "read_sigma": 0.025,
+    "group": "noise",
+    "group_label": "Sensor noise",
+    "grain_short_edge": 384
+  },
+  "lowres_160": {
+    "label": "Low resolution: 160 px",
+    "kind": "resolution",
+    "short_edge": 160,
+    "group": "resolution",
+    "group_label": "Resolution"
+  },
+  "lowres_80": {
+    "label": "Low resolution: 80 px",
+    "kind": "resolution",
+    "short_edge": 80,
+    "group": "resolution",
+    "group_label": "Resolution"
+  },
+  "jpeg_q5": {
+    "label": "JPEG: quality 5",
+    "kind": "jpeg",
+    "quality": 5,
+    "subsampling": 2,
+    "group": "compression",
+    "group_label": "JPEG compression"
+  },
+  "jpeg_q1": {
+    "label": "JPEG: quality 1",
+    "kind": "jpeg",
+    "quality": 1,
+    "subsampling": 2,
+    "group": "compression",
+    "group_label": "JPEG compression"
+  }
+}

@@ -1,8 +1,8 @@
 # CarImageAugmentation
 
-面向**细粒度车型识别**的汽车天气与光照增强实验项目。目标是从车辆原图生成天气、曝光、对比度、冷暖及强光学退化，同时尽量保留车灯、格栅、车标、轮毂、车身折线和基本漆色，为后续分类训练与鲁棒性评测提供候选数据。
+面向**细粒度车型识别**的汽车天气、光照与成像质量增强实验项目。目标是从车辆原图生成天气、曝光、对比度、冷暖、强光学退化，以及模糊、噪声、低分辨率和压缩变化，同时尽量保留车灯、格栅、车标、轮毂、车身折线和基本漆色，为后续分类训练与鲁棒性评测提供候选数据。
 
-目前实现了程序化物理天气基线、本地 Qwen-Image-2.1 原图条件编辑和光照／光学退化增强。项目处于方法探索与样图验证阶段，**尚未完成分类训练或证明增强带来的识别收益**。
+目前实现了程序化物理天气基线、本地 Qwen-Image-2.1 原图条件编辑、光照／光学退化增强，以及成像质量增强。项目处于方法探索与样图验证阶段，**尚未完成分类训练或证明增强带来的识别收益**。
 
 ## 方法与当前进展
 
@@ -11,6 +11,7 @@
 | 物理天气增强 | NumPy/Pillow、人工场景几何、雾散射、雨滴投影、阴天照明与湿路面近似 | 四辆车、三轮实验，共 36 张输出，部分跨批次重复 | 无车辆重绘，但依赖人工配置，晴天反射和照明难以充分改变 |
 | Qwen 天气编辑 | 本地 Qwen-Image-2.1，以原图和天气提示词为条件 | 四辆车 × 阴天湿路／中雨／薄雾／降雪与部分积雪，共 16 个组合 | 天气变化有效，灯内细节、轮毂标识等仍有重绘损失 |
 | 光照与光学退化增强 | NumPy/Pillow；当前保留过曝、光晕，改进阳光与镜头眩光 | 当前改进组 16 张；基础组与旧强光组各保留 24 张历史样图 | 无生成式重绘；眩光为未标定的二维成像近似，真实逆光暂缓 |
+| 成像质量增强（清单方法 2） | NumPy/Pillow；保留失焦，提高运动模糊、颗粒尺度、低分辨率和 JPEG 压缩强度 | basic 与 strong 各八种预设；每组四车 32 张候选图，含整图、部件和短边 224 诊断 | 强档面向明显画质退化；噪声未经真实设备标定，训练收益待验证 |
 
 共享样图为奥迪 A6L、宝马 4 系、小米 YU7、本田 CR-V，原图均为 3840×2880。现有 Qwen 样图尚未被判定通过严格细粒度保真验收；文件校验通过不代表车型保真或训练有效性通过。
 
@@ -18,7 +19,7 @@ Qwen 当前未接入 ControlNet，场景配置中的部件区域用于裁剪对�
 
 ## 效果对比
 
-以下总览直接复制自已有实验预览，随仓库保存在 `docs/assets/`。各图从上到下均为**奥迪 A6L、宝马 4 系、小米 YU7、本田 CR-V**，每行第一列为原图对照。
+以下总览直接复制自已有实验预览，随仓库保存在 `docs/assets/`。四车总览中，从上到下均为**奥迪 A6L、宝马 4 系、小米 YU7、本田 CR-V**，每行第一列为原图对照；单车精选图另见对应图注。
 
 ### 物理方法：阴天湿地与降雨
 
@@ -69,6 +70,39 @@ Qwen 当前未接入 ControlNet，场景配置中的部件区域用于裁剪对�
 
 [查看光照增强大图](docs/assets/lighting-basic-overview.jpg) · [方法与首轮记录](docs/03_lighting_augmentation.md)。完整的整图、四部件及短边 224 诊断对比位于本地 `03_lighting_augmentation/outputs/basic_v1/report/index.html`。新增高光截断和暗部压黑单独记录，不将生成成功当作保真验收通过。
 
+### 当前成像质量增强：加强运动、噪声、低分辨率与压缩
+
+当前对照使用 `--profile strong`。两档失焦沿用基础组参数，运动拖影由当前原图上的 27 像素增至 90 像素，细噪声改为更强的粗颗粒相关噪声，低分辨率降至短边 160／80，JPEG quality 降至 5／1。各预设仍从原图独立生成，JPEG 仍在原尺寸编码。
+
+从左到右：**原图 → 轻度失焦 → 明显失焦 → 强运动模糊 → 粗颗粒噪声 → 短边 160 → 短边 80 → JPEG quality 5 → JPEG quality 1**。
+
+![更强成像质量增强：四车原图、两档失焦、强运动、粗颗粒、低分辨率160和80、JPEG5和1](docs/assets/imaging-quality-strong-overview.png)
+
+[查看强档无损总览](docs/assets/imaging-quality-strong-overview.png) · [方法、参数与运行记录](docs/04_imaging_quality.md)。本地完整图库为 `04_imaging_quality/outputs/quality_strong_v1/report/index.html`，包含全部八种效果的整图、四部件、原生裁剪及短边 224 诊断。粗噪声只放大随机残差场后加回原图，不对原图信号做降分辨率。
+
+下面选取奥迪一张原图作直接比较：每行从左到右为**原图／上一版／本轮强档**；从上到下依次为**运动模糊 27→90 px、独立细噪声→粗颗粒噪声、低分辨率短边 360→80、JPEG quality 12→1**。各行展示不同退化类型，强度未作等效标定。
+
+![成像质量基础组与强档对比](docs/assets/imaging-quality-strength-comparison.png)
+
+[打开强度对比大图](docs/assets/imaging-quality-strength-comparison.png)。整图按相同比例缩放展示，全部拼图使用 PNG，避免预览再次经过 JPEG 编码。JPEG quality 1 是极强压力档，色阶断裂和掉色也属于压缩结果；后续仍需结合实际分类输入尺寸选训练强度。 当前强档 32 项测试及 201 个 PNG 检查通过；两档失焦的 8 张 PNG 与基础组逐字节一致。运动、噪声、低分辨率和 JPEG 在短边 224 下的平均像素差异均增大，详见方法文档的实测表。
+
+<details>
+<summary>基础组历史对照：失焦以外的变化在缩略图中偏弱</summary>
+
+从左到右：**原图 → 轻度失焦 → 明显失焦 → 运动模糊 → 传感器噪声近似 → 短边 720 → 短边 360 → JPEG quality 35 → JPEG quality 12**。各预设独立作用于原图，共 32 张主图；低分辨率结果统一恢复原尺寸便于逐像素位置对照，并额外保留实际小图。两种 JPEG 在原尺寸编码，不混入降分辨率。
+
+![成像质量增强：四辆车的失焦、运动模糊、噪声、低分辨率与 JPEG 压缩对比](docs/assets/imaging-quality-overview.png)
+
+[查看无损 PNG 总览](docs/assets/imaging-quality-overview.png) · [方法、参数与运行记录](docs/04_imaging_quality.md)。完整图库位于本地 `04_imaging_quality/outputs/quality_v1/report/index.html`。总览的缩放可能掩盖噪声和压缩块，请结合原生部件裁剪查看；短边 224 诊断用于观察训练输入缩小时这些退化还保留多少。报告拼图也使用 PNG，避免再经过 JPEG 压缩干扰比较。
+
+下面展示奥迪车灯的**原生像素裁剪**，拼图中的部件没有缩放。仅选部分预设：上排为**原图／明显失焦／运动模糊**，下排为**传感器噪声／短边 360／JPEG quality 12**；网页可能缩放整张图，可点击查看原尺寸。
+
+![奥迪车灯原生裁剪：原图、明显失焦、运动模糊、噪声、短边360和JPEG12](docs/assets/imaging-quality-headlamp.png)
+
+[查看原生车灯大图](docs/assets/imaging-quality-headlamp.png)。明显失焦抹去灯内细节，运动模糊出现方向拖影，噪声带来彩色颗粒，低分辨率丢失灯组结构，强 JPEG 在暗区和边缘出现块效应及阶梯。完整图库包含四辆车、四个部件和全部八种预设。 本轮 27 项测试及 201 个 PNG 检查通过；短边 720／360 在再次缩至 224 时差异大部分消失，后续需按实际分类输入尺寸设强度。
+
+</details>
+
 ## 目录结构
 
 ```text
@@ -81,6 +115,7 @@ CarImageAugmentation/
 │   ├── 01_physics_results.md
 │   ├── 02_qwen_image_edit.md
 │   ├── 03_lighting_augmentation.md
+│   ├── 04_imaging_quality.md
 │   ├── 03_sdxl_controlnet_ipadapter.md
 │   ├── generative_weather_plan.md
 │   ├── research_proposal.md
@@ -103,13 +138,20 @@ CarImageAugmentation/
 │   ├── summarize_batch.py            # 文件校验、HTML 图库与总览
 │   ├── requirements.txt
 │   └── outputs/                      # 本地生成结果，不纳入 Git
-└── 03_lighting_augmentation/
-    ├── configs/                     # basic / strong 历史组、refined 改进组配置
-    ├── lighting/                    # 光度变换、光学效果、整图与部件报告
-    ├── tests/                        # 数值性质、输入保护和裁剪一致性
-    ├── run.py                        # CPU 生成、诊断与报告入口
+├── 03_lighting_augmentation/
+│   ├── configs/                     # basic / strong 历史组、refined 改进组配置
+│   ├── lighting/                    # 光度变换、光学效果、整图与部件报告
+│   ├── tests/                       # 数值性质、输入保护和裁剪一致性
+│   ├── run.py                       # CPU 生成、诊断与报告入口
+│   ├── requirements.txt
+│   └── outputs/                     # 原尺寸 PNG、裁剪、预览和运行清单
+└── 04_imaging_quality/               # 清单方法 2：成像质量增强
+    ├── configs/                     # basic / strong 两组独立退化预设
+    ├── quality/                     # 数值变换、无损预览与部件报告
+    ├── tests/                       # 成像性质、复现与文件一致性
+    ├── run.py                       # CPU 生成、诊断与报告入口
     ├── requirements.txt
-    └── outputs/                      # 原尺寸 PNG、裁剪、预览和运行清单
+    └── outputs/                     # PNG、真实 JPEG、小图和运行清单
 ```
 
 仓库包含代码、配置、文档、测试原图及 `docs/assets/` 中的精选预览图。`models/`、各方法的 `outputs/`、Python 缓存与虚拟环境由 `.gitignore` 排除，克隆后需另行准备权重并生成完整结果。README 中的精选预览可直接浏览；详细文档中指向历史 `outputs/` 的图片链接仍需对应本地输出。
@@ -121,7 +163,7 @@ git clone https://github.com/WYHorizon/CarImageAugmentation.git
 cd CarImageAugmentation
 ```
 
-以下命令均从**项目根目录**执行，面向 Linux/Bash。物理天气和基础光照只依赖 NumPy/Pillow，Qwen 使用独立模型环境；已有本地项目可直接进入项目根目录，无需再次克隆。
+以下命令均从**项目根目录**执行，面向 Linux/Bash。物理天气、光照和成像质量方法只依赖 NumPy/Pillow，Qwen 使用独立模型环境；已有本地项目可直接进入项目根目录，无需再次克隆。
 
 ## 运行物理天气增强
 
@@ -195,6 +237,31 @@ python -m unittest discover -s 03_lighting_augmentation/tests -v
 上例选择改进组，处理四张共享原图和四种预设，生成 16 张 PNG；包含保留的过曝、光晕与重新实现的阳光眩光、镜头眩光，不包含逆光。`--profile basic` 为轻量曝光、对比度和冷暖变化；`--profile strong` 仅用于复现旧强光组。不传 profile 时仍默认基础组。`--check-config` 只预检，不创建输出。正式输出目录必须不存在或为空，禁止写入原图和模型目录。完成后打开输出目录下的 `report/index.html`，查看整图、关键部件、原生裁剪和运行指标。
 
 光度变换和二维光学效果不依赖车辆分割；批处理报告要求 `--scenes` 中具有同名图像条目及 `regions`，默认复用物理方法的场景配置。区域和车辆轮廓只用于报告与诊断，不改变增强作用范围。详见[光照增强方法](docs/03_lighting_augmentation.md)。
+
+## 运行成像质量增强（清单方法 2）
+
+使用 Python 3.10+ 和 NumPy/Pillow，无需模型或 GPU，可复用上述 CPU 环境。目录编号 `04` 是项目方法目录的创建顺序，对应增强清单中的第 2 项。
+
+```bash
+python -m pip install -r 04_imaging_quality/requirements.txt
+
+python 04_imaging_quality/run.py \
+  --profile strong \
+  --output-dir 04_imaging_quality/outputs/quality_strong_new_run \
+  --check-config
+
+python 04_imaging_quality/run.py \
+  --profile strong \
+  --output-dir 04_imaging_quality/outputs/quality_strong_new_run
+
+python -m unittest discover -s 04_imaging_quality/tests -v
+```
+
+上例使用强档，四张原图、八个预设，共生成 32 张原尺寸 PNG、8 张实际低分辨率 PNG 和 8 个实际编码的 JPEG，另有无损整图／部件预览、原生裁剪、HTML 图库和运行清单。原尺寸 PNG 是统一对照格式；低分辨率放大不会恢复细节，JPEG 对应的 PNG 则是该 JPEG 的解码结果。每次运行使用不存在或为空的新目录。
+
+`--profile basic` 保留原基础组，不传 profile 也仍为 basic。强档可加 `--effects motion_strong coarse_noise jpeg_q1` 只运行指定预设；`--seed` 默认 42，噪声按原图内容和预设 ID 稳定派生种子，不随输入遍历顺序改变。新原图需在 `--scenes` 指向的 JSON 中配置同名条目和部件区域，默认共享物理方法的场景文件。区域仅用于对照与指标，退化作用于整图。完整参数、输出解释与限制见[成像质量增强方法](docs/04_imaging_quality.md)。
+
+增强核心适用于其他图片，不依赖样例车型或文件名。批处理换图时修改 `--input-dir` 和 `--scenes`；只看整图可为每张图配置一个 `[0,0,1,1]` 全图区域，无需标注车辆部件。也可以直接调用 `apply_quality(rgb, preset, seed)`，完全不需要场景配置。[自定义图片与参数示例](docs/04_imaging_quality.md#换成自己的图片)包含两种用法。
 
 ## 运行 Qwen 天气编辑
 
@@ -309,6 +376,7 @@ python 02_qwen_image_edit/summarize_batch.py \
 | [物理方法](docs/01_physics_based.md) · [实验结果](docs/01_physics_results.md) | 成像模型、参数、保真边界与三轮记录 |
 | [Qwen 编辑方法](docs/02_qwen_image_edit.md) | 单图与批次结果、资源消耗、视觉检查 |
 | [光照与光学退化增强](docs/03_lighting_augmentation.md) | 当前改进眩光与保留的过曝／光晕、整图／部件对比及历史实验 |
+| [成像质量增强](docs/04_imaging_quality.md) | 失焦、运动模糊、噪声、低分辨率、JPEG 压缩与无损对比 |
 | [生成模型方案](docs/generative_weather_plan.md) | 候选路线与实验验收流程 |
 | [SDXL 备选路线](docs/03_sdxl_controlnet_ipadapter.md) | 暂缓实施的结构与参考条件方案 |
 | [论文研究方案](docs/research_proposal.md) | 判别部件保真候选、评测协议与最小验证计划 |

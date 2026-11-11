@@ -1,8 +1,8 @@
 # CarImageAugmentation
 
-面向**细粒度车型识别**的汽车天气、光照与成像质量增强实验项目。目标是从车辆原图生成天气、曝光、对比度、冷暖、强光学退化，以及模糊、噪声、低分辨率和压缩变化，同时尽量保留车灯、格栅、车标、轮毂、车身折线和基本漆色，为后续分类训练与鲁棒性评测提供候选数据。
+面向**细粒度车型识别**的汽车天气、光照、成像质量及构图增强实验项目。目标是从车辆原图生成天气、曝光、对比度、冷暖、强光学退化，以及模糊、噪声、低分辨率、压缩和构图尺度变化，同时尽量保留车灯、格栅、车标、轮毂、车身折线和基本漆色，为后续分类训练与鲁棒性评测提供候选数据。
 
-目前实现了程序化物理天气基线、本地 Qwen-Image-2.1 原图条件编辑、光照／光学退化增强，以及成像质量增强。项目处于方法探索与样图验证阶段，**尚未完成分类训练或证明增强带来的识别收益**。
+目前实现了程序化物理天气基线、本地 Qwen-Image-2.1 原图条件编辑、光照／光学退化增强，以及成像质量、构图与尺度增强。项目处于方法探索与样图验证阶段，**尚未完成分类训练或证明增强带来的识别收益**。
 
 ## 方法与当前进展
 
@@ -12,6 +12,7 @@
 | Qwen 天气编辑 | 本地 Qwen-Image-2.1，以原图和天气提示词为条件 | 四辆车 × 阴天湿路／中雨／薄雾／降雪与部分积雪，共 16 个组合 | 天气变化有效，灯内细节、轮毂标识等仍有重绘损失 |
 | 光照与光学退化增强 | NumPy/Pillow；当前保留过曝、光晕，改进阳光与镜头眩光 | 当前改进组 16 张；基础组与旧强光组各保留 24 张历史样图 | 无生成式重绘；眩光为未标定的二维成像近似，真实逆光暂缓 |
 | 成像质量增强（清单方法 2） | NumPy/Pillow；保留失焦，提高运动模糊、颗粒尺度、低分辨率和 JPEG 压缩强度 | basic 与 strong 各八种预设；每组四车 32 张候选图，含整图、部件和短边 224 诊断 | 强档面向明显画质退化；噪声未经真实设备标定，训练收益待验证 |
+| 构图与尺度增强（清单方法 3） | NumPy/Pillow；等比放大、偏置裁剪、±12° 画面倾斜，标注同步映射 | 八种预设，四车 32 张候选图；整图、取景框及对应部件对比 | 紧裁剪允许截断，二维取景不产生真实新视角 |
 
 共享样图为奥迪 A6L、宝马 4 系、小米 YU7、本田 CR-V，原图均为 3840×2880。现有 Qwen 样图尚未被判定通过严格细粒度保真验收；文件校验通过不代表车型保真或训练有效性通过。
 
@@ -103,6 +104,24 @@ Qwen 当前未接入 ControlNet，场景配置中的部件区域用于裁剪对�
 
 </details>
 
+### 构图与尺度增强：明显改变车辆占比、位置和倾斜
+
+八种预设分别为 **1.30 倍近景、1.60 倍紧裁剪、左偏、右偏、上偏、下偏、左倾 −12°、右倾 +12°**。近景让现有车辆宽度占比由约 69% 增至约 89%；紧裁剪允许部分车头或车尾出框。所有预设从原图独立生成，保持输出画布尺寸，不扩背景或反射补边。
+
+![四车构图与尺度增强：原图、两档放大、四方向取景和左右倾斜](docs/assets/composition-scale-overview.png)
+
+[查看整图总览](docs/assets/composition-scale-overview.png) · [宝马单车九宫格](docs/assets/composition-scale-example.png) · [方法、坐标处理与运行说明](docs/05_composition_scale.md)。从左到右为原图及上述八种预设。本地完整图库为 `05_composition_scale/outputs/composition_v1/report/index.html`。
+
+下面是宝马的对应部件精选：列为**原图／紧裁剪 1.60 倍／右偏／右倾 +12°**，行为**车灯／格栅／前轮／后轮**。紧裁剪的后轮区域保留约 59.2%，右偏约 88.9%。
+
+![宝马构图增强对应部件：原图、紧裁剪、右偏和右倾](docs/assets/composition-scale-parts.png)
+
+[查看部件精选](docs/assets/composition-scale-parts.png)。部件随变换定位，再按展示格子缩放，因此完整部件在放大或平移后可能看起来相近；尺度、位置看整图，结构和截断看原生裁剪及保留率。
+
+[查看原图取景框示意](docs/assets/composition-scale-framing.png)：宝马三行三列，按行依次为原图、近景、紧裁剪、左偏、右偏、上偏、下偏、左倾、右倾，与单车九宫格顺序一致。橙框由输出四角逆映射到原图，显示实际取景范围。所有标注线只出现在诊断图中，主输出不画线。
+
+本轮 32 张主图、32 张全有效 mask、144 张原生部件裁剪和 25 张预览，共 **233 个 PNG 校验通过，27 项测试通过**。CPU 全流程耗时 149.836 秒，原图哈希未变。近景、上下偏置和倾斜完整保留主体；紧裁剪主体保留约 94.75%–95.86%，关键部件损失需单独检查。
+
 ## 目录结构
 
 ```text
@@ -116,6 +135,7 @@ CarImageAugmentation/
 │   ├── 02_qwen_image_edit.md
 │   ├── 03_lighting_augmentation.md
 │   ├── 04_imaging_quality.md
+│   ├── 05_composition_scale.md
 │   ├── 03_sdxl_controlnet_ipadapter.md
 │   ├── generative_weather_plan.md
 │   ├── research_proposal.md
@@ -145,13 +165,20 @@ CarImageAugmentation/
 │   ├── run.py                       # CPU 生成、诊断与报告入口
 │   ├── requirements.txt
 │   └── outputs/                     # 原尺寸 PNG、裁剪、预览和运行清单
-└── 04_imaging_quality/               # 清单方法 2：成像质量增强
-    ├── configs/                     # basic / strong 两组独立退化预设
-    ├── quality/                     # 数值变换、无损预览与部件报告
-    ├── tests/                       # 成像性质、复现与文件一致性
-    ├── run.py                       # CPU 生成、诊断与报告入口
+├── 04_imaging_quality/               # 清单方法 2：成像质量增强
+│   ├── configs/                     # basic / strong 两组独立退化预设
+│   ├── quality/                     # 数值变换、无损预览与部件报告
+│   ├── tests/                       # 成像性质、复现与文件一致性
+│   ├── run.py                       # CPU 生成、诊断与报告入口
+│   ├── requirements.txt
+│   └── outputs/                     # PNG、真实 JPEG、小图和运行清单
+└── 05_composition_scale/             # 清单方法 3：构图与尺度增强
+    ├── configs/                     # 八种几何预设
+    ├── composition/                 # 仿射变换、标注映射与对比报告
+    ├── tests/                       # 几何性质、裁剪与输入保护
+    ├── run.py                       # CPU 生成、几何诊断与报告入口
     ├── requirements.txt
-    └── outputs/                     # PNG、真实 JPEG、小图和运行清单
+    └── outputs/                     # 主图、有效 mask、裁剪与运行清单
 ```
 
 仓库包含代码、配置、文档、测试原图及 `docs/assets/` 中的精选预览图。`models/`、各方法的 `outputs/`、Python 缓存与虚拟环境由 `.gitignore` 排除，克隆后需另行准备权重并生成完整结果。README 中的精选预览可直接浏览；详细文档中指向历史 `outputs/` 的图片链接仍需对应本地输出。
@@ -163,7 +190,7 @@ git clone https://github.com/WYHorizon/CarImageAugmentation.git
 cd CarImageAugmentation
 ```
 
-以下命令均从**项目根目录**执行，面向 Linux/Bash。物理天气、光照和成像质量方法只依赖 NumPy/Pillow，Qwen 使用独立模型环境；已有本地项目可直接进入项目根目录，无需再次克隆。
+以下命令均从**项目根目录**执行，面向 Linux/Bash。物理天气、光照、成像质量和构图方法只依赖 NumPy/Pillow，Qwen 使用独立模型环境；已有本地项目可直接进入项目根目录，无需再次克隆。
 
 ## 运行物理天气增强
 
@@ -262,6 +289,27 @@ python -m unittest discover -s 04_imaging_quality/tests -v
 `--profile basic` 保留原基础组，不传 profile 也仍为 basic。强档可加 `--effects motion_strong coarse_noise jpeg_q1` 只运行指定预设；`--seed` 默认 42，噪声按原图内容和预设 ID 稳定派生种子，不随输入遍历顺序改变。新原图需在 `--scenes` 指向的 JSON 中配置同名条目和部件区域，默认共享物理方法的场景文件。区域仅用于对照与指标，退化作用于整图。完整参数、输出解释与限制见[成像质量增强方法](docs/04_imaging_quality.md)。
 
 增强核心适用于其他图片，不依赖样例车型或文件名。批处理换图时修改 `--input-dir` 和 `--scenes`；只看整图可为每张图配置一个 `[0,0,1,1]` 全图区域，无需标注车辆部件。也可以直接调用 `apply_quality(rgb, preset, seed)`，完全不需要场景配置。[自定义图片与参数示例](docs/04_imaging_quality.md#换成自己的图片)包含两种用法。
+
+## 运行构图与尺度增强（清单方法 3）
+
+使用 Python 3.10+ 和 NumPy/Pillow，无需模型或 GPU。首轮是八种确定性预设，每种独立作用于原图：
+
+```bash
+python -m pip install -r 05_composition_scale/requirements.txt
+
+python 05_composition_scale/run.py \
+  --output-dir 05_composition_scale/outputs/composition_new_run \
+  --check-config
+
+python 05_composition_scale/run.py \
+  --output-dir 05_composition_scale/outputs/composition_new_run
+
+python -m unittest discover -s 05_composition_scale/tests -v
+```
+
+可加 `--effects zoom_close zoom_tight position_left roll_right` 只运行部分预设。默认共享四张原图及场景配置，新增图片通过 `--input-dir` 和 `--scenes` 指定；部件区域必须针对新图配置。车辆多边形用于放大锚点和主体保留统计，没有轮廓时使用图像中心。几何核心适用于其他图片，报告将标注随同一矩阵映射后再裁对应部件。
+
+输出包含原尺寸 PNG、有效像素 mask、整图及原图取景框、变换后部件标注、原生部件裁剪、短边 224 诊断和 HTML 图库。完全出框的部件标为不可见，部分出框记录保留比例。完整与截断预设的区别、坐标约定及输出解释见[构图与尺度增强方法](docs/05_composition_scale.md)。
 
 ## 运行 Qwen 天气编辑
 
@@ -377,6 +425,7 @@ python 02_qwen_image_edit/summarize_batch.py \
 | [Qwen 编辑方法](docs/02_qwen_image_edit.md) | 单图与批次结果、资源消耗、视觉检查 |
 | [光照与光学退化增强](docs/03_lighting_augmentation.md) | 当前改进眩光与保留的过曝／光晕、整图／部件对比及历史实验 |
 | [成像质量增强](docs/04_imaging_quality.md) | 失焦、运动模糊、噪声、低分辨率、JPEG 压缩与无损对比 |
+| [构图与尺度增强](docs/05_composition_scale.md) | 明显缩放、偏置取景和倾斜，坐标同步映射及部件可见性 |
 | [生成模型方案](docs/generative_weather_plan.md) | 候选路线与实验验收流程 |
 | [SDXL 备选路线](docs/03_sdxl_controlnet_ipadapter.md) | 暂缓实施的结构与参考条件方案 |
 | [论文研究方案](docs/research_proposal.md) | 判别部件保真候选、评测协议与最小验证计划 |

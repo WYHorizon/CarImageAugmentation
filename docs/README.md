@@ -1,6 +1,6 @@
 # 汽车细粒度图像增强实验
 
-项目根目录是 `/nas/wyh/CarImageAugmentation`，用于比较汽车天气、光照与成像质量增强方法。项目说明统一放在 `docs/`；每种方法的代码、依赖、配置、测试和输出保留在自己的方法目录中。
+项目根目录是 `/nas/wyh/CarImageAugmentation`，用于比较汽车天气、光照、成像质量及构图增强方法。项目说明统一放在 `docs/`；每种方法的代码、依赖、配置、测试和输出保留在自己的方法目录中。
 
 ## 文档索引
 
@@ -12,6 +12,7 @@
 | [Qwen 编辑方法](02_qwen_image_edit.md) | 本地环境、单图/批次推理、四车四天气结果（含降雪与部分积雪）、显存实测及保真检查 |
 | [光照与光学退化增强](03_lighting_augmentation.md) | CPU 过曝、光晕与改进眩光，四种当前预设共 16 张、整图／关键部件对比；保留基础组与旧强光组历史记录 |
 | [成像质量增强](04_imaging_quality.md) | 清单方法 2：保留两档失焦，加强运动、粗颗粒、低分辨率和 JPEG；basic／strong 各八种预设及整图／部件对比 |
+| [构图与尺度增强](05_composition_scale.md) | 清单方法 3：四车八预设共 32 张主图，233 PNG 核验与 27 项测试通过；车辆及部件标注同步映射 |
 | [SDXL 结构与参考条件对照](03_sdxl_controlnet_ipadapter.md) | 暂缓的备选路线；仅完成方案及接口核查，尚未部署权重 |
 | [生成模型方案](generative_weather_plan.md) | Qwen、SDXL 等模型选择、结构控制与实验验收流程 |
 | [论文选题与最小验证方案](research_proposal.md) | 相关工作重复风险、判别部件保真天气增强候选、真实分类评测与逐步验证；尚未实现新算法 |
@@ -28,6 +29,7 @@ CarImageAugmentation/
 │   ├── 02_qwen_image_edit.md
 │   ├── 03_lighting_augmentation.md
 │   ├── 04_imaging_quality.md
+│   ├── 05_composition_scale.md
 │   ├── 03_sdxl_controlnet_ipadapter.md
 │   ├── generative_weather_plan.md
 │   └── research_proposal.md
@@ -55,16 +57,23 @@ CarImageAugmentation/
 │   ├── outputs/
 │   ├── run.py
 │   └── requirements.txt
-└── 04_imaging_quality/       # 清单方法 2：成像质量增强，无生成模型
+├── 04_imaging_quality/       # 清单方法 2：成像质量增强，无生成模型
+│   ├── configs/
+│   ├── quality/
+│   ├── tests/
+│   ├── outputs/
+│   ├── run.py
+│   └── requirements.txt
+└── 05_composition_scale/     # 清单方法 3：构图与尺度增强，无生成模型
     ├── configs/
-    ├── quality/
+    ├── composition/
     ├── tests/
     ├── outputs/
     ├── run.py
     └── requirements.txt
 ```
 
-方法目录编号表示建立顺序；`04_imaging_quality/` 对应增强清单中的方法 2，与文档中的 SDXL 备选方案没有从属关系。
+方法目录编号表示建立顺序；`04_imaging_quality/`、`05_composition_scale/` 分别对应增强清单中的方法 2、3，与文档中的 SDXL 备选方案没有从属关系。
 
 这种布局适合比较多种方法：方法内部独立运行，生成结果不会混在一起，共享原图又能保证各方法使用相同输入。不要在各方法目录中重复拷贝数据集；后续如果需要正式训练集，可以再增加共享 `datasets/`，并按原始照片/拍摄组统一划分训练、验证与测试。
 

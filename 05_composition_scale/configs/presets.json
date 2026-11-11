@@ -1,0 +1,70 @@
+{
+  "zoom_close": {
+    "label": "Close framing: 1.30x",
+    "kind": "zoom",
+    "scale": 1.3,
+    "retention_policy": "complete",
+    "group": "zoom",
+    "group_label": "Vehicle scale"
+  },
+  "zoom_tight": {
+    "label": "Tight framing: 1.60x",
+    "kind": "zoom",
+    "scale": 1.6,
+    "retention_policy": "partial_allowed",
+    "group": "zoom",
+    "group_label": "Vehicle scale"
+  },
+  "position_left": {
+    "label": "Vehicle toward left",
+    "kind": "position",
+    "scale": 1.2,
+    "direction": "left",
+    "retention_policy": "partial_allowed",
+    "group": "horizontal",
+    "group_label": "Horizontal framing"
+  },
+  "position_right": {
+    "label": "Vehicle toward right",
+    "kind": "position",
+    "scale": 1.2,
+    "direction": "right",
+    "retention_policy": "partial_allowed",
+    "group": "horizontal",
+    "group_label": "Horizontal framing"
+  },
+  "position_up": {
+    "label": "Vehicle toward top",
+    "kind": "position",
+    "scale": 1.2,
+    "direction": "up",
+    "retention_policy": "complete",
+    "group": "vertical",
+    "group_label": "Vertical framing"
+  },
+  "position_down": {
+    "label": "Vehicle toward bottom",
+    "kind": "position",
+    "scale": 1.2,
+    "direction": "down",
+    "retention_policy": "complete",
+    "group": "vertical",
+    "group_label": "Vertical framing"
+  },
+  "roll_left": {
+    "label": "Roll left: -12 deg",
+    "kind": "roll",
+    "angle": -12.0,
+    "retention_policy": "complete",
+    "group": "roll",
+    "group_label": "Camera roll"
+  },
+  "roll_right": {
+    "label": "Roll right: +12 deg",
+    "kind": "roll",
+    "angle": 12.0,
+    "retention_policy": "complete",
+    "group": "roll",
+    "group_label": "Camera roll"
+  }
+}

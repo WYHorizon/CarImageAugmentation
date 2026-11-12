@@ -1,0 +1,6 @@
+{
+  "source": "user-provided cyclist and bicycle image",
+  "mode": "RGB; checkerboard is baked into the image",
+  "sha256": "b3daea7028a2bd2e9d09be9ba6168f0810ef3c4dd6a725c1939e52108554b24c",
+  "usage": "Second condition image for local Qwen fusion; no deterministic color-key cutout applied."
+}

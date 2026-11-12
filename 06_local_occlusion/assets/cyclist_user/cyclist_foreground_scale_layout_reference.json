@@ -1,0 +1,32 @@
+{
+  "source_scene": "test_images/\u5965\u8feaA6L.jpg",
+  "source_scene_sha256": "6b7fbaa6582cddc6d41fb512d48b1bef73a8d05d925830662c2e1d19e7cedc95",
+  "source_foreground": "06_local_occlusion/assets/cyclist_user/source.png",
+  "source_foreground_sha256": "b3daea7028a2bd2e9d09be9ba6168f0810ef3c4dd6a725c1939e52108554b24c",
+  "canvas_size": [
+    1536,
+    1152
+  ],
+  "foreground_resize": [
+    964,
+    1000
+  ],
+  "foreground_top_left": [
+    -170,
+    340
+  ],
+  "full_foreground_box_xyxy": [
+    -170,
+    340,
+    794,
+    1340
+  ],
+  "previous_foreground_resize": [
+    690,
+    716
+  ],
+  "linear_scale_vs_previous": 1.3971014492753624,
+  "horizontal_box_blur_kernel_px": 9,
+  "purpose": "Larger near-camera foreground layout reference, based on user visual examples. Checkerboard retained for Qwen to remove; not a finished composite or calibrated camera reconstruction.",
+  "output_sha256": "8b9e18e87dad5380a2dc560a1f3928fc20ad757441968104419d7535cbc3e4f0"
+}

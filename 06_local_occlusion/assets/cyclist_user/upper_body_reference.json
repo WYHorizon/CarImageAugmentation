@@ -1,0 +1,13 @@
+{
+  "source": "06_local_occlusion/assets/cyclist_user/source.png",
+  "source_sha256": "b3daea7028a2bd2e9d09be9ba6168f0810ef3c4dd6a725c1939e52108554b24c",
+  "crop_box_xyxy": [
+    0,
+    0,
+    771,
+    365
+  ],
+  "operation": "Reference-only crop to exclude trousers, legs and bicycle wheels. No background removal, scaling or compositing.",
+  "output_sha256": "5200464f4a6b74773cbcb44afd9e90ae63327af2356513e033e44c9ba28f9a87",
+  "purpose": "Qwen appearance and framing reference for upper-body-only foreground fusion."
+}

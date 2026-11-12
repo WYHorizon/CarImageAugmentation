@@ -1,0 +1,50 @@
+{
+  "input_image": "test_images/奥迪A6L.jpg",
+  "reference_image": "06_local_occlusion/assets/cyclist_user/cyclist_foreground_scale_layout_reference.png",
+  "model_dir": "models/Qwen-Image-2.1",
+  "model_revision": "d26bb61231c349cf6b7896fa83353113880e1ba3",
+  "scene_config": "01_physics_based/configs/scenes.json",
+  "width": 1536,
+  "height": 1152,
+  "seed": 42,
+  "num_inference_steps": 40,
+  "true_cfg_scale": 1.0,
+  "use_kv_cache": true,
+  "vae_tiling": false,
+  "weather_label": "larger near-camera cyclist; left and bottom boundary crop; light motion blur",
+  "prompt": "第一张图是黑色奥迪汽车原照片，第二张图是依据近景人物比例放置好的骑行者构图草稿。请严格沿用第二张图中骑行者的大小、位置和边界裁切，将他自然融合到第一张图里。第二张图里人物周围的灰白棋盘是待去除的素材背景，必须全部去掉，用第一张图的汽车和道路恢复棋盘后场景，去掉矩形边缘。骑行者离相机明显比汽车近，所以他的头部和上半身在画面里应当较大，按照第二张图的近景尺度，不要缩成汽车前方的小人。头盔顶部约在画高32%，略高于原汽车车顶；肩背和身体占据左侧前景，骑行者朝右经过。头部、身体、自行车整体保持原参考的自然比例，不单独放大头或拉长四肢。由于人物靠近镜头，背包或后轮的一部分自然从画面左侧出画，下方也有自然截断。保留头盔、头部、蓝灰色外套、黑色背包、双臂、握车把的手、部分棕色裤腿、车架与前轮上半部，后轮仅保留在左下边缘露出的部分；轮胎最下部和轮胎接地点全部在底边之外。前轮上缘约在画高85%，不要把车轮全藏掉，也不要把完整自行车缩回画内。身体和手臂确实遮住奥迪左侧车头、部分格栅和机盖，同时保留右侧车灯、大部分车窗侧身及后轮清楚可见。人物和自行车只保留轻微一致的水平运动模糊，程度参考第二张图，短拖影约6至9像素即可；头盔边缘、面部轮廓、手、衣服褶皱和车架应能辨认，不要糊成一片，不要长条残影。汽车、树木和建筑保持清晰。匹配人物的阳光方向、色温和对比度，轮胎接地点在画外，不画画内落地痕迹。完整保持第一张图横向4:3画布、原汽车的位置和尺寸、机位、背景建筑树木道路及其他背景车辆。保留未遮挡的灯带、四环车标、格栅、轮毂辐条、车身折线、车窗与黑色漆面。只输出自然融合后的照片，不加棋盘、白边、文字、边框或拼图。",
+  "layout_intent": {
+    "strategy": "larger_near_camera_foreground_visual_reference",
+    "reference_foreground_box_xyxy": [
+      -170,
+      340,
+      794,
+      1340
+    ],
+    "canvas_size": [
+      1536,
+      1152
+    ],
+    "visible_elements": [
+      "head",
+      "upper body",
+      "partial legs",
+      "handlebar",
+      "upper frame",
+      "upper arcs of bicycle wheels"
+    ],
+    "hidden_elements": [
+      "tire-ground contact points",
+      "lowest bicycle portion"
+    ],
+    "motion_blur_reference_kernel_px": 9,
+    "vehicle_occlusion_target": "front bumper and part of grille/hood, preserving the right side of the car",
+    "enforcement": "Visual reference and prompt only; not a hard coordinate constraint or measured occlusion mask.",
+    "latest_user_direction": "Increase near-camera cyclist scale to match user examples. Head top above the car roof, partial body and wheels cut by left/bottom edges. Keep partial wheels, hidden contact points and the lighter motion blur.",
+    "reference_foreground_size": [
+      964,
+      1000
+    ],
+    "linear_scale_vs_previous": 1.3971014492753624
+  }
+}

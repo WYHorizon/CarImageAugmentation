@@ -1,0 +1,58 @@
+{
+  "input_image": "test_images/奥迪A6L.jpg",
+  "reference_image": "06_local_occlusion/assets/cyclist_user/upper_body_layout_reference.png",
+  "model_dir": "models/Qwen-Image-2.1",
+  "model_revision": "d26bb61231c349cf6b7896fa83353113880e1ba3",
+  "scene_config": "01_physics_based/configs/scenes.json",
+  "width": 1536,
+  "height": 1152,
+  "seed": 42,
+  "num_inference_steps": 40,
+  "true_cfg_scale": 1.0,
+  "use_kv_cache": true,
+  "vae_tiling": false,
+  "weather_label": "small upper-body cyclist; visual layout reference at bottom edge",
+  "layout_intent": {
+    "strategy": "visual_layout_reference_with_cropped_upper_body",
+    "entry_edges": [
+      "bottom"
+    ],
+    "approximate_visible_foreground_box_normalized": [
+      0.08,
+      0.71,
+      0.38,
+      1.0
+    ],
+    "helmet_width_image_fraction": [
+      0.055,
+      0.07
+    ],
+    "waist_and_lower_body_outside_frame": true,
+    "bicycle_wheels_outside_frame": true,
+    "visible_elements": [
+      "helmet",
+      "head",
+      "shoulders",
+      "upper_back",
+      "arms",
+      "hands",
+      "handlebar"
+    ],
+    "enforcement": "Visual reference plus prompt only. No hard coordinate lock or occlusion mask.",
+    "crop_boundary": "through lower jacket above waist; no trousers, hips, legs or wheels visible",
+    "reference_crop_box_xyxy": [
+      0,
+      0,
+      771,
+      365
+    ],
+    "reference_lower_edge_aligned_to_output_bottom": true,
+    "reference_layout_patch_box_xyxy": [
+      110,
+      842,
+      765,
+      1152
+    ]
+  },
+  "prompt": "第一张图是必须保留的奥迪汽车原照片。第二张图是同一场景的精确构图草稿：画面底部已按合适尺寸和位置放好一位朝右骑行人物的上半身，但是人物周围仍带有灰白棋盘素材背景。请严格沿用第二张图里这个人物的大小、位置、头盔大小和下边缘裁切，只完成自然融合：把灰白棋盘全部去掉，恢复棋盘后第一张图的道路和背景，去掉矩形贴图边界，匹配人物与原照片的光照和色温。人物只保留第二张图中实际露出的头盔、头部、背包、蓝灰色上衣肩背和伸向右方的手臂；他的上衣和手臂下端被整张照片底边截断。禁止放大人物，禁止将头部往上提，禁止把第二张图的人物补全成全身。维持第二张图的头顶位置约画高75%、小尺寸人物位于左下角的布局。下半身、棕色裤腰、腿、鞋、自行车轮胎、脚踏和下部车架都在画外，绝对不能在画面里添加这些内容。只有少量手或握把可以在下边缘露出，不要为了显示车把把整个骑行者上移。原图车辆是主要主体，保留第一张图中车辆的位置、尺寸、车灯、格栅、四环标志、车牌、轮毂、车身折线和漆面，以及原来的建筑、树木和其他背景车辆。最终输出与两张参考一样的完整1536x1152横向4:3照片，原场景不裁剪、不缩放，不改变相机视角，不加文字或边框。第二张图只是帮助准确放置小人物，最终画面必须是自然摄影效果，不能保留棋盘格或素材矩形。"
+}

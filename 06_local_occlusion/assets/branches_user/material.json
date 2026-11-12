@@ -1,0 +1,32 @@
+{
+  "checker_low": 238.0,
+  "checker_high": 255.0,
+  "checker_agreement": 0.969408372219895,
+  "clear_border_row": 0,
+  "clear_border_column": 997,
+  "method": "light_checker_colour_key",
+  "size": [
+    1000,
+    707
+  ],
+  "alpha_preserved": false,
+  "foreground_fraction_alpha_ge_128": 0.1956209335219236,
+  "alpha_weighted_fraction": 0.19824426324985445,
+  "parameters": {
+    "opaque_min_channel_below": 190,
+    "opaque_chroma_above": 40,
+    "core_erosion_pixels": 1,
+    "thin_dark_anchor_below": 75,
+    "candidate_min_channel_below": 224,
+    "candidate_chroma_above": 12,
+    "neighbour_radius_pixels": 8,
+    "minimum_alpha": 0.025
+  },
+  "limitations": "Designed for coloured/dark foregrounds on light checkerboard; pale neutral foreground may be removed. Inspect the matte before reuse.",
+  "source_filename": "source.png",
+  "output_filename": "rgba.png",
+  "source_sha256": "9d26c26811981265e1d0e65fe504fe1bce4252ea4e01c79cf1a68d341971f497",
+  "output_sha256": "008797e3f0e9861900d8bd403ef5451b4823308f9a5f9a2b5cfd2480985d2568",
+  "provenance": "User-supplied image attachment; no external asset download or generative editing.",
+  "license": "Not specified by the user; no third-party reuse license inferred."
+}

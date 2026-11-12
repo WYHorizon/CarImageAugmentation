@@ -1,0 +1,50 @@
+{
+  "input_image": "test_images/奥迪A6L.jpg",
+  "reference_image": "06_local_occlusion/assets/cyclist_user/cyclist_foreground_scale_layout_reference.png",
+  "model_dir": "models/Qwen-Image-2.1",
+  "model_revision": "d26bb61231c349cf6b7896fa83353113880e1ba3",
+  "scene_config": "01_physics_based/configs/scenes.json",
+  "width": 1536,
+  "height": 1152,
+  "seed": 42,
+  "num_inference_steps": 40,
+  "true_cfg_scale": 1.0,
+  "use_kv_cache": true,
+  "vae_tiling": false,
+  "weather_label": "fixed larger foreground layout; preserve visible upper bicycle wheel",
+  "prompt": "请完成第二张图的合成草稿。第二张图的人物大小、位置、自行车尺寸和裁切范围已经确定，必须原样保留，不再把人物或自行车放大，不改变他在画面里的位置。第一张图提供准确的原汽车和背景，用来恢复第二张图中被灰白棋盘遮住的部分。你的任务仅是去掉第二张图的人物素材棋盘背景及矩形边缘，并让人物的颜色、光照与原照片自然协调。严格使用第二张图已经放好的近景比例：头盔顶在约y=370，头盔宽约170像素、位于x=290到460附近，不能上移到画面顶部或扩大成超过200像素的头盔。人物保持蓝灰外套、黑色背包、灰色头盔、部分棕色裤腿和朝右骑行姿势，身体和手臂遮住汽车左侧车头与格栅，大部分汽车侧身仍可见。必须保留第二张图中清楚可见的自行车前轮上半圈：前轮上缘约在y=980，画面底部能看到从x约440到770的轮胎圆弧、前叉和辐条；左下边缘也露出后轮的部分上缘。轮胎接地点和车轮下半部在画外，但自行车轮子不能全部被裁掉，不能只剩车把和车架。请勿为了展示轮子而缩小整个骑行者，也勿为了近景效果再次放大人物。直接遵循第二张图的几何摆放。保持轻微水平运动模糊，约6至9像素短拖影，人物轮廓、衣服、手和车架清楚可辨，不要长拖影或全身糊成一团。第一张图的汽车和背景保持清晰，原车位置、尺寸、机位、4:3取景、车灯、格栅、轮毂、车身折线、漆面、建筑、树木、道路和背景车辆均保持原样。输出一张自然融合照片，不残留棋盘、白边、矩形遮罩、文字或边框。",
+  "layout_intent": {
+    "strategy": "larger_near_camera_foreground_visual_reference",
+    "reference_foreground_box_xyxy": [
+      -170,
+      340,
+      794,
+      1340
+    ],
+    "canvas_size": [
+      1536,
+      1152
+    ],
+    "visible_elements": [
+      "head",
+      "upper body",
+      "partial legs",
+      "handlebar",
+      "upper frame",
+      "upper arcs of bicycle wheels"
+    ],
+    "hidden_elements": [
+      "tire-ground contact points",
+      "lowest bicycle portion"
+    ],
+    "motion_blur_reference_kernel_px": 9,
+    "vehicle_occlusion_target": "front bumper and part of grille/hood, preserving the right side of the car",
+    "enforcement": "Visual layout reference plus prompt only. The layout is already at final intended scale; no further enlargement requested.",
+    "latest_user_direction": "Increase near-camera cyclist scale to match user examples. Head top above the car roof, partial body and wheels cut by left/bottom edges. Keep partial wheels, hidden contact points and the lighter motion blur.",
+    "reference_foreground_size": [
+      964,
+      1000
+    ],
+    "linear_scale_vs_previous": 1.3971014492753624
+  }
+}

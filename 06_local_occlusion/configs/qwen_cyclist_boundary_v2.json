@@ -1,0 +1,26 @@
+{
+  "input_image": "test_images/奥迪A6L.jpg",
+  "reference_image": "06_local_occlusion/assets/cyclist_user/source.png",
+  "model_dir": "models/Qwen-Image-2.1",
+  "model_revision": "d26bb61231c349cf6b7896fa83353113880e1ba3",
+  "scene_config": "01_physics_based/configs/scenes.json",
+  "width": 1536,
+  "height": 1152,
+  "seed": 42,
+  "num_inference_steps": 40,
+  "true_cfg_scale": 1.0,
+  "use_kv_cache": true,
+  "vae_tiling": false,
+  "weather_label": "smaller cyclist; upper body only at bottom boundary",
+  "layout_intent": {
+    "strategy": "small_upper_body_at_bottom_edge",
+    "entry_edges": ["bottom"],
+    "approximate_visible_foreground_box_normalized": [0.1, 0.69, 0.43, 1.0],
+    "helmet_width_image_fraction": [0.06, 0.08],
+    "waist_and_lower_body_outside_frame": true,
+    "bicycle_wheels_outside_frame": true,
+    "visible_elements": ["helmet", "head", "shoulders", "upper_back", "arms", "hands", "handlebar"],
+    "enforcement": "Prompt only. No hard geometry control or measured foreground mask."
+  },
+  "prompt": "在第一张图的黑色奥迪原照片上加入第二张图中的同一名骑行者，朝右骑行，只从画面最下方露出一小部分上半身，汽车始终是画面的主要主体。请严格遵循以下取景：骑行者缩小、明显下移，头盔顶部在整张画面高度约70%的位置，人物可见部分集中在画面左下方、约画宽10%至43%及画高69%至100%的小区域内。头盔宽度约画宽6%至8%，比奥迪前轮直径小得多；人物大小与原图汽车匹配，保持自然的人体比例，不是贴近镜头的巨人。画面底边从骑行者腰部以上或腰线处截过，下半身整体都在底边之外。画内只看到头盔、头部、肩背、部分牛仔外套上身、伸向右侧的手臂、握住车把的双手和少量车把。两条腿、膝盖、裤子下半身、鞋、脚踏、自行车前后两个车轮、轮胎圆弧和车架下部全部位于画面下方之外，画内不要出现这些部分，也不要把完整自行车缩进画面里。车把和手靠近底边，车身自然在画外延续；这是一张下边界大幅截断近景骑行者的汽车照片。保持第二张图中灰色头盔、黑色背包、蓝灰色牛仔外套和朝右骑车的上身姿势，头肩与手臂大小协调，去除灰白棋盘素材背景。骑行者只少量遮挡汽车左下方保险杠或格栅下缘，尽量保持车灯、机盖、风挡、车顶、车门和汽车前后轮可见。完整保留第一张图的横向4:3构图、拍摄机位、汽车位置和尺寸，原图不裁切、不放大、不移动车辆。匹配原图光照、色温与清晰度，骑行者允许很轻微自然柔化。原来的车灯纹理、四环车标、格栅、轮毂辐条、车身折线、黑色漆面反光、建筑、冬季树木、道路和其他背景车辆尽量保持原样。只输出一张自然照片，不增加文字、边框、拼图、其他人物或新车辆。"
+}

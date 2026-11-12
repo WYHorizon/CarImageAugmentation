@@ -1,0 +1,52 @@
+{
+  "input_image": "test_images/奥迪A6L.jpg",
+  "reference_image": "06_local_occlusion/assets/cyclist_user/upper_body_reference.png",
+  "model_dir": "models/Qwen-Image-2.1",
+  "model_revision": "d26bb61231c349cf6b7896fa83353113880e1ba3",
+  "scene_config": "01_physics_based/configs/scenes.json",
+  "width": 1536,
+  "height": 1152,
+  "seed": 42,
+  "num_inference_steps": 40,
+  "true_cfg_scale": 1.0,
+  "use_kv_cache": true,
+  "vae_tiling": false,
+  "weather_label": "upper-body-only reference; small cyclist at bottom edge",
+  "layout_intent": {
+    "strategy": "cropped_upper_body_reference_at_bottom_edge",
+    "entry_edges": [
+      "bottom"
+    ],
+    "approximate_visible_foreground_box_normalized": [
+      0.08,
+      0.71,
+      0.38,
+      1.0
+    ],
+    "helmet_width_image_fraction": [
+      0.055,
+      0.07
+    ],
+    "waist_and_lower_body_outside_frame": true,
+    "bicycle_wheels_outside_frame": true,
+    "visible_elements": [
+      "helmet",
+      "head",
+      "shoulders",
+      "upper_back",
+      "arms",
+      "hands",
+      "handlebar"
+    ],
+    "enforcement": "Prompt only. No hard geometry control or measured foreground mask.",
+    "crop_boundary": "through lower jacket above waist; no trousers, hips, legs or wheels visible",
+    "reference_crop_box_xyxy": [
+      0,
+      0,
+      771,
+      365
+    ],
+    "reference_lower_edge_aligned_to_output_bottom": true
+  },
+  "prompt": "以第一张黑色奥迪汽车原照片为完整底图，在画面左下角融合第二张图中的人物上半身。第二张图已经特意裁掉了人的腰部以下和自行车下部：请只使用这张参考中实际可见的灰色头盔、头部、黑色背包、蓝灰色牛仔外套肩背、上身和朝右伸的手臂，把参考图已经截断上衣和前臂的下边缘直接延续到最终照片的下边界，不补全参考图下方任何身体或自行车。去除参考图灰白棋盘背景，让图中人自然成为汽车前方经过、被照片底边截断的小面积近景。人物整体缩小，保持自然头肩比例，头盔顶部位于画高约71%到75%，可见人物只占画面左下角约30%的宽度和下方约29%的高度，头盔宽度约100像素，明显小于汽车前轮；上衣腹部、腰线和双手下缘自然越出画框。可以在底边露出一小段握把，手或车把也可以部分出画。禁止显示任何棕色裤料、裤腰、臀部、腿、膝盖、鞋、自行车轮胎、脚踏或下部车架，这些都在画框外。人物必须与第一张图中汽车的尺度协调，汽车是清晰的主体；人物只在左下保险杠前少量经过。保持第一张图的横向4:3画布、汽车位置、汽车尺寸、机位、构图以及原有场景全部不变，不放大或裁切汽车原图。匹配原来的阳光方向、色温、阴影和清晰度，近景人物有轻微自然柔化，不能出现棋盘、白边或矩形素材边框。保留原汽车车灯外形与纹理、四环标志、格栅、车牌、轮毂辐条、轮胎、车身折线、门窗和黑色漆面，也保留原建筑、树木、道路与背景车辆。只生成融合后的单张自然照片。"
+}

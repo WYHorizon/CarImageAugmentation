@@ -1,0 +1,25 @@
+{
+  "input_image": "test_images/奥迪A6L.jpg",
+  "reference_image": "06_local_occlusion/assets/cyclist_user/source.png",
+  "model_dir": "models/Qwen-Image-2.1",
+  "model_revision": "d26bb61231c349cf6b7896fa83353113880e1ba3",
+  "scene_config": "01_physics_based/configs/scenes.json",
+  "width": 1536,
+  "height": 1152,
+  "seed": 42,
+  "num_inference_steps": 40,
+  "true_cfg_scale": 1.0,
+  "use_kv_cache": true,
+  "vae_tiling": false,
+  "weather_label": "cyclist foreground fusion; bottom-left boundary entry",
+  "layout_intent": {
+    "strategy": "boundary_constrained_foreground_occlusion",
+    "entry_edges": ["bottom", "left"],
+    "approximate_full_foreground_box_normalized": [-0.08, 0.3, 0.52, 1.12],
+    "hide_tire_ground_contacts_below_frame": true,
+    "preserve_complete_head_and_upper_body": true,
+    "keep_vehicle_right_side_visible": true,
+    "enforcement": "Prompt only. The box is descriptive metadata, not a model geometry constraint or measured mask."
+  },
+  "prompt": "编辑第一张图（image1）的黑色奥迪汽车照片，把第二张图（image2）中的同一位骑行者和自行车自然融入第一张图的近处前景。重点采用边界进入的抓拍构图：骑行者从画面左下方经过，朝右骑行，自行车下半部分自然延伸到画面底边之外，轮胎与地面的接触点完全在画外。必须让画面底边直接裁断两只自行车轮胎的下方圆弧，后轮左侧也可以从画面左边截断；不要把完整的两个车轮和接地位置都缩回画面内，也不要在物体周围留出完整一圈地面。保持原图整个横向4:3画布、机位、汽车位置和汽车尺度不变，只让新增的近景骑行者超出边界，不裁剪或放大原来的汽车照片。骑行者和自行车的完整投影范围大致为画宽-8%到52%，头盔顶部约为画高30%，轮胎最低点延伸至画高112%处。人物头部、头盔、肩背、双手与车把完整可见，人体和自行车保持参考图的自然比例，不能为了遮挡拉长身体、拉长腿或压扁车轮。保留参考中的灰色头盔、黑色背包、蓝灰色牛仔外套、棕色长裤和深色鞋，以及朝右骑行的侧面姿态。人物正在骑车，脚合理放在脚踏上，不是站立或悬空。第二张图的灰白棋盘格只是素材背景，完全去除；自行车辐条之间、轮内和车架空隙自然透出汽车原场景。近景人物和车架主要遮住奥迪左侧车头、部分格栅与机盖，保留汽车右侧大部分车身、车窗及后轮清楚可见。匹配原图阳光方向、色温、透视和照片质感，骑行者可有极轻微自然前景柔化，目标汽车保持清晰。由于轮胎接地点在画外，不要在画内伪造轮胎落地位置，不要给人物添加漂浮效果。精确保留未遮挡的原车车灯外形与灯带、格栅、四环标识、轮毂辐条、轮胎、车身折线、门窗、黑色漆面反光，以及原来的建筑、冬季树木、道路、其他背景车辆和晴天天气。只输出融合后的单张原场景照片，不做拼图，不增加边框、棋盘、文字或其他新的人与车辆。"
+}

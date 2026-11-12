@@ -1,0 +1,24 @@
+{
+  "source_scene": "test_images/\u5965\u8feaA6L.jpg",
+  "source_foreground": "06_local_occlusion/assets/cyclist_user/upper_body_reference.png",
+  "canvas_size": [
+    1536,
+    1152
+  ],
+  "reference_patch_size": [
+    655,
+    310
+  ],
+  "reference_patch_top_left": [
+    110,
+    842
+  ],
+  "reference_patch_box_xyxy": [
+    110,
+    842,
+    765,
+    1152
+  ],
+  "purpose": "Rough visual placement reference only. The real checkerboard is intentionally retained for Qwen to remove; this is not a finished composite.",
+  "output_sha256": "1c83f509d4f7a1fa7b9ba43b2e1f05d3da1a1359858249a263130de0589f8837"
+}

@@ -1,0 +1,45 @@
+{
+  "input_image": "test_images/奥迪A6L.jpg",
+  "reference_image": "06_local_occlusion/assets/cyclist_user/cyclist_motion_layout_reference.png",
+  "model_dir": "models/Qwen-Image-2.1",
+  "model_revision": "d26bb61231c349cf6b7896fa83353113880e1ba3",
+  "scene_config": "01_physics_based/configs/scenes.json",
+  "width": 1536,
+  "height": 1152,
+  "seed": 42,
+  "num_inference_steps": 40,
+  "true_cfg_scale": 1.0,
+  "use_kv_cache": true,
+  "vae_tiling": false,
+  "weather_label": "moving cyclist; visible wheel upper arcs; tire contact below frame",
+  "prompt": "第一张图是黑色奥迪原照片，第二张图是同一照片上已经放置好骑行者的构图和运动模糊草稿。请按照第二张图的人物位置、尺度、车轮裁切范围和横向运动拖影完成自然融合。第二张图骑行者周围灰白棋盘只是尚未去掉的素材背景，必须彻底去掉，恢复棋盘后第一张图的汽车和道路，去除矩形边框。重要：保留第二张图里可见的骑行者身体、棕色长裤的一部分、双臂和车把、部分自行车车架、两只自行车轮子的上半圈与辐条；两轮最下方和轮胎接地位置自然延伸到画面底边之外，不要在画内画接地点，也不要把轮子全部藏起来。人物和自行车按草稿的整体比例和位置一起移动，头盔顶部大约在画高50%，车轮上缘在画高约87%，下半圈在画外。人物从左下方前景向右经过，身体和手臂明确遮住奥迪左侧车头、部分格栅和机盖，形成有实际遮挡面积的前景层次，不能把整个人挪到汽车下方空地里。保持草稿中的小一号骑行者大小，头部约为汽车前轮直径的一半，不能变成巨大人物；奥迪右侧大部分车身和后轮仍清楚可见。人物和自行车都要有清楚可见、方向一致的水平运动模糊，沿水平方向约25像素的自然拖影，尤其头盔、面部、背包、衣服外缘、手臂和车轮辐条要呈现经过时的速度感；保持可辨认轮廓和自然比例，不生成多个人、多只手或重复自行车。模糊只属于运动中的前景人物和自行车，汽车、背景建筑和树木保持清晰。匹配原图阳光、色温和对比度，让前景与道路场景协调；轮胎接地点在画外，不需编造画内接地阴影。保留第一张图完整横向4:3取景、汽车的位置和尺度，以及未遮挡的灯带、车标、格栅、轮毂、车身折线、车窗、黑色漆面、建筑、树木、道路和其他背景车辆。只输出融合后的自然汽车照片，不输出草稿，不加棋盘、文字、边框或拼图。",
+  "layout_intent": {
+    "strategy": "visual_layout_and_horizontal_motion_blur_reference",
+    "reference_foreground_box_xyxy": [
+      60,
+      560,
+      750,
+      1276
+    ],
+    "canvas_size": [
+      1536,
+      1152
+    ],
+    "visible_elements": [
+      "head",
+      "upper body",
+      "partial legs",
+      "handlebar",
+      "upper frame",
+      "upper arcs of bicycle wheels"
+    ],
+    "hidden_elements": [
+      "tire-ground contact points",
+      "lowest bicycle portion"
+    ],
+    "motion_blur_reference_kernel_px": 25,
+    "vehicle_occlusion_target": "front bumper and part of grille/hood, preserving the right side of the car",
+    "enforcement": "Visual reference and prompt only; not a hard coordinate constraint or measured occlusion mask.",
+    "latest_user_direction": "Keep partial wheels visible, hide only ground contact, apply visible horizontal motion blur and genuinely occlude the car. Supersedes earlier upper-body-only trials."
+  }
+}

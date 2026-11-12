@@ -13,7 +13,7 @@
 | 光照与光学退化增强 | NumPy/Pillow；过曝、光晕、阳光眩光与镜头眩光 | refined 四种预设，四车共 16 张样图 | 无生成式重绘；眩光为未标定的二维成像近似 |
 | 成像质量增强（清单方法 2） | NumPy/Pillow；失焦、运动模糊、粗颗粒噪声、低分辨率和 JPEG 压缩 | strong 八种预设，四车 32 张候选图，含整图、部件和短边 224 诊断 | 强档面向明显画质退化；噪声未经真实设备标定，训练收益待验证 |
 | 构图与尺度增强（清单方法 3） | NumPy/Pillow；等比放大、偏置裁剪、±12° 画面倾斜，标注同步映射 | 八种预设，四车 32 张候选图；整图、取景框及对应部件对比 | 紧裁剪允许截断，二维取景不产生真实新视角 |
-| 局部遮挡增强（清单方法 5） | CPU 通用 RGBA 合成；独立本地 Qwen 双参考融合 | 奥迪枝叶合成与骑行者融合；小米 YU7 树枝、骑行者两版 Qwen 遮挡，含整图、车头放大及四部件对比 | CPU 固定配置摆放；Qwen 可能重绘部件，无精确遮挡 mask |
+| 局部遮挡增强（清单方法 5） | CPU 通用 RGBA 合成；独立本地 Qwen 双参考融合 | 奥迪枝叶合成与骑行者融合；小米 YU7 树枝、骑行者两版 Qwen 遮挡，含整图及车头放大对比 | CPU 固定配置摆放；Qwen 可能重绘部件，无精确遮挡 mask |
 
 共享样图为奥迪 A6L、宝马 4 系、小米 YU7、本田 CR-V，原图均为 3840×2880。现有 Qwen 样图尚未被判定通过严格细粒度保真验收；文件校验通过不代表车型保真或训练有效性通过。
 
@@ -107,9 +107,13 @@ Qwen 当前未接入 ControlNet，场景配置中的部件区域用于裁剪对�
 
 同一张绿色小米 YU7 原图，分别加入用户提供的树枝和骑行者素材。两版均由服务器上的 **Qwen-Image-2.1** 双参考融合生成，输出为 **1536×1152**。树枝从左侧伸入，覆盖机盖、部分头灯和前保险杠；近景骑行者覆盖车头，保留部分自行车轮并带有横向运动模糊。两版都保留大部分车侧与汽车车轮。
 
-| 树枝遮挡 | 骑行者遮挡 |
-| --- | --- |
-| ![小米 YU7 树枝遮挡成图](docs/assets/qwen-yu7-branches.png) | ![小米 YU7 骑行者遮挡成图](docs/assets/qwen-yu7-cyclist.png) |
+**树枝遮挡**
+
+![小米 YU7 树枝遮挡成图](docs/assets/qwen-yu7-branches.png)
+
+**骑行者遮挡**
+
+![小米 YU7 骑行者遮挡成图](docs/assets/qwen-yu7-cyclist.png)
 
 [查看树枝原尺寸 PNG](docs/assets/qwen-yu7-branches.png) · [查看骑行者原尺寸 PNG](docs/assets/qwen-yu7-cyclist.png)。以下三列统一为 **原图 → 树枝遮挡 → 骑行者遮挡**，原图缩至相同工作尺寸用于对照。
 
@@ -119,11 +123,7 @@ Qwen 当前未接入 ControlNet，场景配置中的部件区域用于裁剪对�
 
 ![小米 YU7 车头实际遮挡放大对比](docs/assets/qwen-yu7-occlusion-detail.jpg)
 
-关键部件按行依次为 **头灯、前脸／下格栅、前轮、后轮**，列顺序与整图一致：
-
-![小米 YU7 四部件对比：原图、树枝遮挡与骑行者遮挡](docs/assets/qwen-yu7-occlusion-parts.jpg)
-
-[整图大图](docs/assets/qwen-yu7-occlusion-overview.jpg) · [车头放大图](docs/assets/qwen-yu7-occlusion-detail.jpg) · [部件大图](docs/assets/qwen-yu7-occlusion-parts.jpg) · [布局、配置与复跑方法](docs/06_local_occlusion.md#yu7-occlusion)。两张单图保留生成 PNG，对比页使用 JPEG；以上图片均随仓库保存，可在 GitHub 直接浏览。
+[整图大图](docs/assets/qwen-yu7-occlusion-overview.jpg) · [车头放大图](docs/assets/qwen-yu7-occlusion-detail.jpg) · [布局、配置与复跑方法](docs/06_local_occlusion.md#yu7-occlusion)。两张单图保留生成 PNG，对比页使用 JPEG；以上图片均随仓库保存，可在 GitHub 直接浏览。
 
 布局参考与提示词用于引导位置、比例和模糊，不能精确锁定生成结果。Qwen 仍会重绘未遮挡的灯内纹理、轮毂／轮胎细节和车牌小字；这些展示图未使用原车像素贴回，没有精确生成遮挡 mask。单张推理约 41 秒，峰值已分配显存约 48.3 GiB。
 

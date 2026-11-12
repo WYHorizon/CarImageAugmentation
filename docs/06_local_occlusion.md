@@ -280,11 +280,15 @@ CUDA_VISIBLE_DEVICES=2 /nas/wyh/.conda/envs/car-weather-qwen21/bin/python \
 
 ### 小米 YU7：树枝与骑行者遮挡（2026-11-12）
 
-使用绿色的 `test_images/小米YU7.jpg`，分别生成树枝与骑行者遮挡。两张成图都使用服务器上的 Qwen-Image-2.1，输出 1536×1152、seed 42、40 步；布局参考先确定素材大小和位置，最终遮挡关系仍需检查生成结果。两版成图与整图、车头放大及部件对比已加入根 README，精选图片随仓库保存，GitHub 可直接浏览。
+使用绿色的 `test_images/小米YU7.jpg`，分别生成树枝与骑行者遮挡。两张成图都使用服务器上的 Qwen-Image-2.1，输出 1536×1152、seed 42、40 步；布局参考先确定素材大小和位置，最终遮挡关系仍需检查生成结果。根 README 展示两版成图、整图与车头放大对比，部件核查资料通过本页链接查看。精选图片随仓库保存，GitHub 可直接浏览。
 
-| 树枝遮挡 | 骑行者遮挡 |
-| --- | --- |
-| ![小米 YU7 树枝遮挡](assets/qwen-yu7-branches.png) | ![小米 YU7 骑行者遮挡](assets/qwen-yu7-cyclist.png) |
+**树枝遮挡**
+
+![小米 YU7 树枝遮挡](assets/qwen-yu7-branches.png)
+
+**骑行者遮挡**
+
+![小米 YU7 骑行者遮挡](assets/qwen-yu7-cyclist.png)
 
 以下三列为 **原图／树枝遮挡／骑行者遮挡**：
 

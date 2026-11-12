@@ -275,3 +275,52 @@ CUDA_VISIBLE_DEVICES=2 /nas/wyh/.conda/envs/car-weather-qwen21/bin/python \
 [当前结果](../06_local_occlusion/outputs/qwen_cyclist_foreground_scale_v2/edited.png) · [上一版／近景放大版对比](../06_local_occlusion/outputs/qwen_cyclist_foreground_scale_v2/previews/scale_comparison.png) · [原图对比](../06_local_occlusion/outputs/qwen_cyclist_foreground_scale_v2/previews/overview.png)。独立复核可见头部与上身确实增大且头顶高于车顶，前轮上方圆弧保留，接地点画外，人物遮挡部分车头和格栅，大部分车身仍清楚；轻度拖影保留，待用户评估。
 
 1536×1152、seed 42、40 步不变；当前结果推理 41.048 秒、全流程 55.086 秒，峰值已分配／预留显存为 48.324／57.848 GiB。18 管线 PNG、12 原生裁剪、输入与代码快照核验通过，另有一张仅展示用途的旧新对比。未改推理代码、未重跑 CPU 测试；原始输出未做贴回、额外裁切或后加模糊。
+
+<a id="yu7-occlusion"></a>
+
+### 小米 YU7：树枝与骑行者遮挡（2026-11-12）
+
+使用绿色的 `test_images/小米YU7.jpg`，分别生成树枝与骑行者遮挡。两张成图都使用服务器上的 Qwen-Image-2.1，输出 1536×1152、seed 42、40 步；布局参考先确定素材大小和位置，最终遮挡关系仍需检查生成结果。两版成图与整图、车头放大及部件对比已加入根 README，精选图片随仓库保存，GitHub 可直接浏览。
+
+| 树枝遮挡 | 骑行者遮挡 |
+| --- | --- |
+| ![小米 YU7 树枝遮挡](assets/qwen-yu7-branches.png) | ![小米 YU7 骑行者遮挡](assets/qwen-yu7-cyclist.png) |
+
+以下三列为 **原图／树枝遮挡／骑行者遮挡**：
+
+![小米 YU7 两种局部遮挡与原图对比](assets/qwen-yu7-occlusion-overview.jpg)
+
+[车头实际遮挡放大图](assets/qwen-yu7-occlusion-detail.jpg) · [四部件对比](assets/qwen-yu7-occlusion-parts.jpg)。部件按行依次为头灯、前脸／下格栅、前轮、后轮；列顺序与整图一致。两个单图 PNG 直接复制自模型生成结果，三张 JPEG 对比图复制自上轮审图文件，未在发布时重新推理或编辑图像。
+
+- 树枝配置：[qwen_branches_yu7_v1.json](../06_local_occlusion/configs/qwen_branches_yu7_v1.json)。先使用 [branches_yu7.json](../06_local_occlusion/configs/branches_yu7.json) 制作有透明度的前景合成布局，宽度为画宽的 0.95，左上位置为 `(-0.28, 0.15)`，覆盖左侧车头、机盖及部分头灯，再由 Qwen 协调光照与景深。CPU 布局的车辆轮廓遮挡率为 **16.10%**，这是布局的 alpha 统计，**不能作为 Qwen 成图的遮挡率**。
+- 骑行者配置：[qwen_cyclist_yu7_v1.json](../06_local_occlusion/configs/qwen_cyclist_yu7_v1.json)。在 1536×1152 画布中，将原素材缩放至 964×1000，放到 `(-80, 320)`，加入 9 px 水平模糊作为参考。素材从左侧及底边进入，预留自行车轮上部，目标是覆盖车头而保留大部分车侧。棋盘底由 Qwen 去除；参考位置、模糊参数都是软引导，生成图不保证逐像素遵循。
+
+两份布局图与来源、变换、哈希记录分别保存在 `06_local_occlusion/assets/branches_user/yu7_layout_reference.*` 和 `06_local_occlusion/assets/cyclist_user/yu7_layout_reference.*`。共享 Qwen 入口的整图标题改为读取场景名称，换车后不再固定显示 Audi A6L；推理算法与 CPU 抠图代码未改动。
+
+复跑时先检查 GPU 空闲情况，将 `CUDA_VISIBLE_DEVICES` 改为可用设备，并使用尚不存在的输出目录：
+
+```bash
+CUDA_VISIBLE_DEVICES=2 /nas/wyh/.conda/envs/car-weather-qwen21/bin/python \
+  06_local_occlusion/run_qwen.py \
+  --config 06_local_occlusion/configs/qwen_branches_yu7_v1.json \
+  --output-dir 06_local_occlusion/outputs/qwen_branches_yu7_new_run
+
+CUDA_VISIBLE_DEVICES=2 /nas/wyh/.conda/envs/car-weather-qwen21/bin/python \
+  06_local_occlusion/run_qwen.py \
+  --config 06_local_occlusion/configs/qwen_cyclist_yu7_v1.json \
+  --output-dir 06_local_occlusion/outputs/qwen_cyclist_yu7_new_run
+```
+
+本地完整运行记录保存在 `06_local_occlusion/outputs/qwen_branches_yu7_v1/`、`qwen_cyclist_yu7_v1/`；综合审图与校验保存在 `06_local_occlusion/outputs/yu7_occlusion_review_v1/`。这些生成目录由 Git 忽略，上述 `docs/assets/` 图片不依赖本地输出目录即可浏览。来源对应如下：
+
+| 随仓库发布的图片（位于 `docs/assets/`） | 原始来源（位于 `06_local_occlusion/outputs/`） |
+| --- | --- |
+| `qwen-yu7-branches.png` | `qwen_branches_yu7_v1/edited.png` |
+| `qwen-yu7-cyclist.png` | `qwen_cyclist_yu7_v1/edited.png` |
+| `qwen-yu7-occlusion-overview.jpg` | `yu7_occlusion_review_v1/overview.jpg` |
+| `qwen-yu7-occlusion-detail.jpg` | `yu7_occlusion_review_v1/occlusion_detail.jpg` |
+| `qwen-yu7-occlusion-parts.jpg` | `yu7_occlusion_review_v1/parts.jpg` |
+
+本轮两次推理分别耗时 40.776 秒（树枝）、40.889 秒（骑行者），峰值已分配显存分别为 48.255／48.308 GiB；均完成 40 步。两组共 36 个管线 PNG 的哈希／解码、24 张部件裁剪的逐像素核对通过，原图、参考图和运行代码快照匹配，结束后 GPU 2 显存恢复为空闲。
+
+助手目视确认树枝与骑行者均与车头实体重叠，机盖／前脸遮挡明显，车侧与两只汽车车轮大部分保留。骑行者实际头顶比布局参考更高、轮廓略放大，水平运动感比参考更明显；不能声称严格遵循配置像素坐标或 9 px 模糊。Qwen 对未遮挡的灯内纹理、轮胎／轮毂细节与车牌小字仍有重绘，两张成图未使用原车像素贴回。这些是视觉展示样例，未验证训练收益，也没有精确的生成遮挡 mask。

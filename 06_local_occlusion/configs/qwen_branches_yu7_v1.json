@@ -1,0 +1,26 @@
+{
+  "input_image": "test_images/小米YU7.jpg",
+  "reference_image": "06_local_occlusion/assets/branches_user/yu7_layout_reference.png",
+  "model_dir": "models/Qwen-Image-2.1",
+  "model_revision": "d26bb61231c349cf6b7896fa83353113880e1ba3",
+  "scene_config": "01_physics_based/configs/scenes.json",
+  "width": 1536,
+  "height": 1152,
+  "seed": 42,
+  "num_inference_steps": 40,
+  "true_cfg_scale": 1.0,
+  "use_kv_cache": true,
+  "vae_tiling": false,
+  "weather_label": "Xiaomi YU7 - foreground branches covering hood and front bumper",
+  "prompt": "以第一张图的绿色小米YU7汽车照片为准确底图，完成第二张图的前景树枝融合。第二张图已经确定树枝的大小和位置，请严格保持这种布局，不移动、缩小或删掉树枝。前景是一束从画面左侧和左下边缘伸进来的细树枝与绿色叶片，距离相机比汽车更近。枝叶必须真实地挡在汽车前面，明确覆盖左侧车头、绿色机盖、前保险杠与画面中间偏左的部分车灯；不能把树枝放到车后、道路空白处或只遮背景。遵守第二张图的适度遮挡量，仍保留大部分绿色车身、右侧车门、前后轮廓与两个轮毂可见，不能把整辆车遮住。只让树枝的光照、颜色、边缘和自然浅景深与第一张图协调，枝条较细，近景叶片有轻微柔焦但不是大片模糊色块，保留真实叶片纹理与枝条连接。禁止新增树干、花盆、行人、其他车辆、文字或边框。第一张图的汽车、车位、大小、角度、4:3构图、绿色漆面、车灯灯带、轮毂、车门折线、车窗、车牌和建筑道路背景保持原样，不重画车体，不改季节。不要出现棋盘格、白边或粘贴矩形。输出自然摄影效果的完整场景。",
+  "layout_intent": {
+    "strategy": "alpha_composite_layout_then_qwen_harmonization",
+    "canvas_size": [
+      1536,
+      1152
+    ],
+    "cpu_vehicle_opaque_fraction": 0.16097539525560525,
+    "vehicle_occlusion_target": "hood, front bumper/grille and partial headlamp; right side and wheels retained",
+    "enforcement": "Visual reference and prompt only. CPU layout opacity fraction is not a measurement of the Qwen output."
+  }
+}

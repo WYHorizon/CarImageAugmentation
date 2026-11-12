@@ -1,0 +1,24 @@
+{
+  "name": "branches_yu7",
+  "label": "Xiaomi YU7 - foreground branches",
+  "transform": {
+    "width_fraction": 0.95,
+    "position_xy": [
+      -0.28,
+      0.15
+    ],
+    "angle_degrees": 0.0,
+    "flip_horizontal": false,
+    "blur_short_edge_fraction": 0.0025,
+    "brightness": 0.88,
+    "saturation": 0.85
+  },
+  "review_targets": {
+    "vehicle_opaque_fraction": [
+      0.12,
+      0.25
+    ],
+    "minimum_visible_regions": 2,
+    "minimum_region_visible_fraction": 0.7
+  }
+}

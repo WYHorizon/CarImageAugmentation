@@ -1,0 +1,29 @@
+{
+  "source_scene": "test_images/小米YU7.jpg",
+  "source_scene_sha256": "f52504ccb251d328cb13bc1546b07d1a1c61ea2c4e56fb031461ce6be4ac7bfd",
+  "source_foreground": "06_local_occlusion/assets/cyclist_user/source.png",
+  "source_foreground_sha256": "b3daea7028a2bd2e9d09be9ba6168f0810ef3c4dd6a725c1939e52108554b24c",
+  "canvas_size": [
+    1536,
+    1152
+  ],
+  "foreground_resize": [
+    964,
+    1000
+  ],
+  "foreground_top_left": [
+    -80,
+    320
+  ],
+  "full_foreground_box_xyxy": [
+    -80,
+    320,
+    884,
+    1320
+  ],
+  "horizontal_box_blur_kernel_px": 9,
+  "purpose": "Geometry-only layout reference for Qwen: near-camera cyclist from left/bottom, in front of car hood and front bumper. Checkerboard is retained for model removal, not a finished composite or an occlusion mask.",
+  "resize_filter": "Pillow LANCZOS",
+  "blur_padding": "edge",
+  "output_sha256": "478cf57733bfb90bcaf0b046f248724ae7d7f0039aae87595d07f82f68829c21"
+}

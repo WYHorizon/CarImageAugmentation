@@ -198,7 +198,8 @@ def main():
         helpers.save_json(output / 'manifest.json', manifest)
         helpers.create_previews(output, content, edited, scene, config)
         # Lossless review sheets in addition to the shared helper's JPEG previews.
-        helpers.pair_panel(content, edited, 'Audi A6L | Qwen two-reference cyclist fusion', width=800).save(output / 'previews/overview.png')
+        preview_title = f"{scene.get('label', source.stem)} | Qwen foreground fusion"
+        helpers.pair_panel(content, edited, preview_title, width=800).save(output / 'previews/overview.png')
         if not all(sha256(Path(path)) == digest for path, digest in inputs.items()):
             raise RuntimeError('An input changed during inference')
         pngs = sorted(output.rglob('*.png'))

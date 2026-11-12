@@ -1,0 +1,29 @@
+{
+  "source_scene": "test_images/小米YU7.jpg",
+  "source_scene_sha256": "f52504ccb251d328cb13bc1546b07d1a1c61ea2c4e56fb031461ce6be4ac7bfd",
+  "source_foreground": "06_local_occlusion/assets/branches_user/rgba.png",
+  "source_foreground_sha256": "008797e3f0e9861900d8bd403ef5451b4823308f9a5f9a2b5cfd2480985d2568",
+  "cpu_preset": "06_local_occlusion/configs/branches_yu7.json",
+  "cpu_preset_sha256": "39660d20d883780cd8347562c40963fd76d704c517331b66eb276be55608a1a5",
+  "cpu_result": "06_local_occlusion/outputs/branches_yu7_v1/images/occluded.png",
+  "cpu_result_sha256": "ed9cf4257b196b7599c8b218a31fddaaac00a7b58c31cf4c67dd8cdd20d708d0",
+  "canvas_size": [
+    1536,
+    1152
+  ],
+  "transform": {
+    "width_fraction": 0.95,
+    "position_xy": [
+      -0.28,
+      0.15
+    ],
+    "angle_degrees": 0.0,
+    "flip_horizontal": false,
+    "blur_short_edge_fraction": 0.0025,
+    "brightness": 0.88,
+    "saturation": 0.85
+  },
+  "cpu_vehicle_opaque_fraction": 0.16097539525560525,
+  "purpose": "Fixed foreground branch layout for local Qwen harmonization. Alpha compositing is the layout preparation only; final Qwen output is not pixel-pasted back. CPU coverage is not a measurement of the generated Qwen result.",
+  "output_sha256": "2c82478a625dd9fb02edd9a32a49bc16f9892cab54880fc92ca84f84dadce270"
+}

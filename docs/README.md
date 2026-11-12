@@ -13,7 +13,7 @@
 | [光照与光学退化增强](03_lighting_augmentation.md) | CPU 过曝、光晕与改进眩光，四种当前预设共 16 张、整图／关键部件对比；保留基础组与旧强光组历史记录 |
 | [成像质量增强](04_imaging_quality.md) | 清单方法 2：保留两档失焦，加强运动、粗颗粒、低分辨率和 JPEG；basic／strong 各八种预设及整图／部件对比 |
 | [构图与尺度增强](05_composition_scale.md) | 清单方法 3：四车八预设共 32 张主图，233 PNG 核验与 27 项测试通过；车辆及部件标注同步映射 |
-| [局部遮挡增强](06_local_occlusion.md) | 清单方法 5：通用 RGBA 合成，用户枝叶素材去底与奥迪单图演示；整图、部件及遮挡率诊断 |
+| [局部遮挡增强](06_local_occlusion.md) | 清单方法 5：通用 RGBA 合成与本地 Qwen 双参考融合；奥迪样例、小米 YU7 树枝／骑行者两版，含整图、车头与部件对比、配置及复跑方法 |
 | [SDXL 结构与参考条件对照](03_sdxl_controlnet_ipadapter.md) | 暂缓的备选路线；仅完成方案及接口核查，尚未部署权重 |
 | [生成模型方案](generative_weather_plan.md) | Qwen、SDXL 等模型选择、结构控制与实验验收流程 |
 | [论文选题与最小验证方案](research_proposal.md) | 相关工作重复风险、判别部件保真天气增强候选、真实分类评测与逐步验证；尚未实现新算法 |
@@ -73,7 +73,7 @@ CarImageAugmentation/
 │   ├── outputs/
 │   ├── run.py
 │   └── requirements.txt
-└── 06_local_occlusion/       # 清单方法 5：局部遮挡，当前为单图演示
+└── 06_local_occlusion/       # 清单方法 5：RGBA 与 Qwen 局部遮挡
     ├── assets/
     ├── configs/
     ├── occlusion/
@@ -81,6 +81,7 @@ CarImageAugmentation/
     ├── outputs/
     ├── prepare_asset.py
     ├── run.py
+    ├── run_qwen.py
     └── requirements.txt
 ```
 

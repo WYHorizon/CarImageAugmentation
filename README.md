@@ -2,7 +2,7 @@
 
 面向**细粒度车型识别**的汽车天气、光照、成像质量、构图及局部遮挡增强实验项目。目标是从车辆原图生成天气、曝光、对比度、冷暖、强光学退化，以及模糊、噪声、低分辨率、压缩、构图尺度和前景遮挡变化，同时检查车灯、格栅、车标、轮毂、车身折线和基本漆色的保留情况，为后续分类训练与鲁棒性评测提供候选数据。
 
-目前实现了程序化物理天气基线、本地 Qwen-Image-2.1 原图条件编辑、光照／光学退化增强、成像质量、构图与尺度增强，以及通用 RGBA 前景合成的单图遮挡演示；局部遮挡另提供本地 Qwen 双参考融合入口。项目处于方法探索与样图验证阶段，**尚未完成分类训练或证明增强带来的识别收益**。
+目前实现了程序化物理天气基线、本地 Qwen-Image-2.1 原图条件编辑、光照／光学退化增强、成像质量、构图与尺度增强，以及通用 RGBA 前景合成；局部遮挡另提供本地 Qwen 双参考融合，已有奥迪 A6L 和小米 YU7 的素材遮挡样例。项目处于方法探索与样图验证阶段，**尚未完成分类训练或证明增强带来的识别收益**。
 
 ## 方法与当前进展
 
@@ -13,7 +13,7 @@
 | 光照与光学退化增强 | NumPy/Pillow；过曝、光晕、阳光眩光与镜头眩光 | refined 四种预设，四车共 16 张样图 | 无生成式重绘；眩光为未标定的二维成像近似 |
 | 成像质量增强（清单方法 2） | NumPy/Pillow；失焦、运动模糊、粗颗粒噪声、低分辨率和 JPEG 压缩 | strong 八种预设，四车 32 张候选图，含整图、部件和短边 224 诊断 | 强档面向明显画质退化；噪声未经真实设备标定，训练收益待验证 |
 | 构图与尺度增强（清单方法 3） | NumPy/Pillow；等比放大、偏置裁剪、±12° 画面倾斜，标注同步映射 | 八种预设，四车 32 张候选图；整图、取景框及对应部件对比 | 紧裁剪允许截断，二维取景不产生真实新视角 |
-| 局部遮挡增强（清单方法 5） | CPU 通用 RGBA 合成；独立本地 Qwen 双参考融合 | 枝叶合成与近景骑行者融合，保留部分车轮和轻微横向拖影，均有整图／部件对比 | CPU 固定配置摆放；Qwen 可能重绘部件，无精确遮挡 mask |
+| 局部遮挡增强（清单方法 5） | CPU 通用 RGBA 合成；独立本地 Qwen 双参考融合 | 奥迪枝叶合成与骑行者融合；小米 YU7 树枝、骑行者两版 Qwen 遮挡，含整图、车头放大及四部件对比 | CPU 固定配置摆放；Qwen 可能重绘部件，无精确遮挡 mask |
 
 共享样图为奥迪 A6L、宝马 4 系、小米 YU7、本田 CR-V，原图均为 3840×2880。现有 Qwen 样图尚未被判定通过严格细粒度保真验收；文件校验通过不代表车型保真或训练有效性通过。
 
@@ -103,6 +103,30 @@ Qwen 当前未接入 ControlNet，场景配置中的部件区域用于裁剪对�
 
 [查看整图对比](docs/assets/qwen-cyclist-foreground-scale-example.png) · [车灯与轮毂对比](docs/assets/qwen-cyclist-foreground-scale-parts.jpg) · [当前配置](06_local_occlusion/configs/qwen_cyclist_foreground_scale_v2.json) · [方法与实测](docs/06_local_occlusion.md#增大近景比例2026-11-11)。骑行者遮住部分车头与格栅，大部分车身仍然可见；布局由参考图和提示词引导，不保证未遮挡部件逐像素不变。当前样例生成约 41.05 秒，峰值已分配显存约 48.32 GiB，训练收益尚未验证。
 
+### 局部遮挡：小米 YU7 的树枝与骑行者融合
+
+同一张绿色小米 YU7 原图，分别加入用户提供的树枝和骑行者素材。两版均由服务器上的 **Qwen-Image-2.1** 双参考融合生成，输出为 **1536×1152**。树枝从左侧伸入，覆盖机盖、部分头灯和前保险杠；近景骑行者覆盖车头，保留部分自行车轮并带有横向运动模糊。两版都保留大部分车侧与汽车车轮。
+
+| 树枝遮挡 | 骑行者遮挡 |
+| --- | --- |
+| ![小米 YU7 树枝遮挡成图](docs/assets/qwen-yu7-branches.png) | ![小米 YU7 骑行者遮挡成图](docs/assets/qwen-yu7-cyclist.png) |
+
+[查看树枝原尺寸 PNG](docs/assets/qwen-yu7-branches.png) · [查看骑行者原尺寸 PNG](docs/assets/qwen-yu7-cyclist.png)。以下三列统一为 **原图 → 树枝遮挡 → 骑行者遮挡**，原图缩至相同工作尺寸用于对照。
+
+![小米 YU7 整图对比：原图、树枝遮挡与骑行者遮挡](docs/assets/qwen-yu7-occlusion-overview.jpg)
+
+车头放大图用于检查素材是否实际覆盖机盖、灯具和前保险杠：
+
+![小米 YU7 车头实际遮挡放大对比](docs/assets/qwen-yu7-occlusion-detail.jpg)
+
+关键部件按行依次为 **头灯、前脸／下格栅、前轮、后轮**，列顺序与整图一致：
+
+![小米 YU7 四部件对比：原图、树枝遮挡与骑行者遮挡](docs/assets/qwen-yu7-occlusion-parts.jpg)
+
+[整图大图](docs/assets/qwen-yu7-occlusion-overview.jpg) · [车头放大图](docs/assets/qwen-yu7-occlusion-detail.jpg) · [部件大图](docs/assets/qwen-yu7-occlusion-parts.jpg) · [布局、配置与复跑方法](docs/06_local_occlusion.md#yu7-occlusion)。两张单图保留生成 PNG，对比页使用 JPEG；以上图片均随仓库保存，可在 GitHub 直接浏览。
+
+布局参考与提示词用于引导位置、比例和模糊，不能精确锁定生成结果。Qwen 仍会重绘未遮挡的灯内纹理、轮毂／轮胎细节和车牌小字；这些展示图未使用原车像素贴回，没有精确生成遮挡 mask。单张推理约 41 秒，峰值已分配显存约 48.3 GiB。
+
 ## 目录结构
 
 ```text
@@ -161,7 +185,7 @@ CarImageAugmentation/
 │   ├── run.py                       # CPU 生成、几何诊断与报告入口
 │   ├── requirements.txt
 │   └── outputs/                     # 主图、有效 mask、裁剪与运行清单
-└── 06_local_occlusion/               # 清单方法 5：局部遮挡，当前单图演示
+└── 06_local_occlusion/               # 清单方法 5：RGBA 与 Qwen 局部遮挡
     ├── assets/                      # 用户枝叶／骑行者素材、RGBA 与准备记录
     ├── configs/                     # CPU 摆放参数及 Qwen 双参考融合配置
     ├── occlusion/                   # 素材去底、通用合成、遮挡统计与报告
@@ -324,14 +348,19 @@ python -m unittest discover -s 06_local_occlusion/tests -v
 
 输出包括一张增强主图、输入快照、alpha／不透明遮挡 mask、车辆可见区域、整图和部件预览、原生与短边 224 裁剪、HTML 图库和运行清单。[局部遮挡方法文档](docs/06_local_occlusion.md)包含伪棋盘素材去底命令、完整参数和复用边界。
 
-使用服务器已有 Qwen 融合骑行者素材时，调用独立的 [run_qwen.py](06_local_occlusion/run_qwen.py)。当前首页效果使用车辆原图和骑行者布局参考，跳过 CPU 去底。先检查 GPU 空闲情况；下面的 GPU 2 需按实际空闲设备调整：
+使用服务器已有 Qwen 融合素材时，调用独立的 [run_qwen.py](06_local_occlusion/run_qwen.py)。小米 YU7 两版分别使用车辆原图与树枝／骑行者布局参考；树枝参考由 RGBA 合成得到，骑行者参考保留棋盘底交由模型处理。先检查 GPU 空闲情况；下面的 GPU 2 需按实际空闲设备调整，输出目录必须尚不存在：
 
 ```bash
 nvidia-smi
 CUDA_VISIBLE_DEVICES=2 /nas/wyh/.conda/envs/car-weather-qwen21/bin/python \
   06_local_occlusion/run_qwen.py \
-  --config 06_local_occlusion/configs/qwen_cyclist_foreground_scale_v2.json \
-  --output-dir 06_local_occlusion/outputs/qwen_cyclist_foreground_new_run
+  --config 06_local_occlusion/configs/qwen_branches_yu7_v1.json \
+  --output-dir 06_local_occlusion/outputs/qwen_branches_yu7_new_run
+
+CUDA_VISIBLE_DEVICES=2 /nas/wyh/.conda/envs/car-weather-qwen21/bin/python \
+  06_local_occlusion/run_qwen.py \
+  --config 06_local_occlusion/configs/qwen_cyclist_yu7_v1.json \
+  --output-dir 06_local_occlusion/outputs/qwen_cyclist_yu7_new_run
 ```
 
 该入口沿用本地模型环境及共享权重，保存原始生成图和部件对比；未遮挡区域可能被重绘，不能沿用 CPU 路径的像素保真及遮挡率结论。[Qwen 融合配置、命令与限制](docs/06_local_occlusion.md#本地-qwen-双参考融合)。

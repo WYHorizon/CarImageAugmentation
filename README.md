@@ -55,11 +55,25 @@ Qwen 当前未接入 ControlNet，场景配置中的部件区域用于裁剪对�
 
 使用 `--profile strong`，包含两档失焦、当前原图上的 90 像素运动拖影、粗颗粒相关噪声、短边 160／80 的低分辨率，以及 JPEG quality 5／1 压缩。各预设从原图独立生成，JPEG 在原尺寸编码。
 
-从左到右：**原图 → 轻度失焦 → 明显失焦 → 强运动模糊 → 粗颗粒噪声 → 短边 160 → 短边 80 → JPEG quality 5 → JPEG quality 1**。
+按效果分为四组，每行只展示 **原图＋两种增强**，便于直接比较。每组从上到下均为**奥迪 A6L、宝马 4 系、小米 YU7、本田 CR-V**，第一列重复原图作为参照。
 
-![更强成像质量增强：四车原图、两档失焦、强运动、粗颗粒、低分辨率160和80、JPEG5和1](docs/assets/imaging-quality-strong-overview.png)
+**失焦：原图 → 轻度失焦 → 明显失焦**
 
-[查看强档无损总览](docs/assets/imaging-quality-strong-overview.png) · [方法、参数与运行记录](docs/04_imaging_quality.md)。本地完整图库为 `04_imaging_quality/outputs/quality_strong_v1/report/index.html`，包含全部八种效果的整图、四部件、原生裁剪及短边 224 诊断。粗噪声只放大随机残差场后加回原图，不对原图信号做降分辨率。
+![四车失焦对比：原图、轻度失焦、明显失焦](docs/assets/imaging-quality-strong-defocus.png)
+
+**运动与噪声：原图 → 强运动模糊 → 粗颗粒噪声**
+
+![四车运动与噪声对比：原图、强运动模糊、粗颗粒噪声](docs/assets/imaging-quality-strong-motion-noise.png)
+
+**低分辨率：原图 → 短边 160 → 短边 80**
+
+![四车低分辨率对比：原图、短边160、短边80](docs/assets/imaging-quality-strong-resolution.png)
+
+**JPEG 压缩：原图 → quality 5 → quality 1**
+
+![四车JPEG压缩对比：原图、quality 5、quality 1](docs/assets/imaging-quality-strong-compression.png)
+
+[查看完整九列总览](docs/assets/imaging-quality-strong-overview.png) · [方法、参数与运行记录](docs/04_imaging_quality.md)。本地完整图库为 `04_imaging_quality/outputs/quality_strong_v1/report/index.html`，包含全部八种效果的整图、四部件、原生裁剪及短边 224 诊断。粗噪声只放大随机残差场后加回原图，不对原图信号做降分辨率。
 
 全部拼图使用 PNG，避免预览再次经过 JPEG 编码。JPEG quality 1 是极强压力档，色阶断裂和掉色也属于压缩结果，训练强度仍需结合实际分类输入尺寸选择。当前强档 **32 项测试及 201 个 PNG 检查通过**；短边 224 的诊断结果见方法文档。
 

@@ -27,9 +27,25 @@
 
 四张原图、八种强档配置对应 32 张主图。强档目录为 `04_imaging_quality/outputs/quality_strong_v1/`，入口是[本地强档图库](../04_imaging_quality/outputs/quality_strong_v1/report/index.html)。两档 JPEG 仍在 3840×2880 原尺寸编码，改变的只有压缩参数，没有混入降分辨率。
 
-![四车强档成像质量总览](assets/imaging-quality-strong-overview.png)
+为便于在页面内看清效果，当前展示分为四组，每行均为**原图＋两种增强**。每组从上到下是奥迪 A6L、宝马 4 系、小米 YU7、本田 CR-V。
 
-从上到下为奥迪 A6L、宝马 4 系、小米 YU7、本田 CR-V；从左到右为**原图、轻度失焦、明显失焦、强运动模糊、粗颗粒噪声、短边 160、短边 80、JPEG 5、JPEG 1**。[打开强档无损总览](assets/imaging-quality-strong-overview.png)。
+**原图／轻度失焦／明显失焦**
+
+![四车失焦对比](assets/imaging-quality-strong-defocus.png)
+
+**原图／强运动模糊／粗颗粒噪声**
+
+![四车运动与噪声对比](assets/imaging-quality-strong-motion-noise.png)
+
+**原图／短边 160／短边 80**
+
+![四车低分辨率对比](assets/imaging-quality-strong-resolution.png)
+
+**原图／JPEG quality 5／JPEG quality 1**
+
+![四车JPEG压缩对比](assets/imaging-quality-strong-compression.png)
+
+[打开完整九列总览](assets/imaging-quality-strong-overview.png)。2026-11-12 调整了文档展示：从原 3600×1448 总览中按 400 像素列宽，分别取零基列 `[0,1,2]`、`[0,3,4]`、`[0,5,6]`、`[0,7,8]`，生成四张 1200×1448 PNG。仅重新排列已有预览列，不缩放或重采样其中的像素；每组保留原图、车型及效果标签，四车八种结果完整保留。文档新增图不计入原实验的 201 个 PNG，增强代码、参数及运行输出保持原样。
 
 奥迪单车精选，四行三列：每行从左到右为**原图／上一版／本轮强档**；从上到下为**运动模糊 27→90 px、独立细噪声→粗颗粒噪声、低分辨率短边 360→80、JPEG quality 12→1**。拼图为 1500×1628，整图按相同比例缩放，未将各退化标定为相同感知强度。
 

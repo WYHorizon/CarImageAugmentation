@@ -1,0 +1,295 @@
+{
+  "created_utc": "2026-11-13T10:53:17.941644+00:00",
+  "batch": "07_background_replacement/outputs/background_3x4_v1",
+  "purpose": "Publish the complete 3-background x 4-vehicle sample set and readable comparisons in GitHub Markdown.",
+  "copy_processing": "Byte-for-byte copies only; no re-encoding, regeneration, crop, enhancement or source/output modification.",
+  "report_processing_note": "Any aspect-preserving image resizing and white-background alpha display compositing occurred previously when the original report was built; publication copies the report PNG bytes unchanged.",
+  "image_count": 19,
+  "generated_result_count": 12,
+  "background_overview_count": 3,
+  "vehicle_comparison_count": 4,
+  "generated_result_size": [
+    1536,
+    1152
+  ],
+  "report_size": [
+    1592,
+    1392
+  ],
+  "background_overview_layout": {
+    "rows": 2,
+    "columns": 2,
+    "reading_order": "left to right, top to bottom",
+    "panels": [
+      "奥迪A6L",
+      "宝马4系",
+      "小米YU7",
+      "本田CR-V"
+    ]
+  },
+  "vehicle_comparison_layout": {
+    "rows": 2,
+    "columns": 2,
+    "reading_order": "left to right, top to bottom",
+    "panels": [
+      "原图",
+      "海边日落公路",
+      "秋季林间公路",
+      "城市高架公路"
+    ]
+  },
+  "source_file_integrity_verified": true,
+  "copies_byte_identical": true,
+  "png_decode_checks_passed": 19,
+  "classification_evaluation_performed": false,
+  "total_image_bytes": 61126976,
+  "files": [
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/report/background_coastal.png",
+      "published_path": "docs/assets/background-replacement/background_coastal.png",
+      "kind": "background_overview",
+      "size": [
+        1592,
+        1392
+      ],
+      "mode": "RGB",
+      "bytes": 2576797,
+      "sha256": "4c8f784e8dd3c99797dc4e7d1ec2d6b8f9ec5a216c8d9156ae6c54cf60f7839b",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/report/background_autumn.png",
+      "published_path": "docs/assets/background-replacement/background_autumn.png",
+      "kind": "background_overview",
+      "size": [
+        1592,
+        1392
+      ],
+      "mode": "RGB",
+      "bytes": 3695130,
+      "sha256": "67fbe464bd8c27b030cb555b0d1dffe22060c33d221373d67ec87a3aa5907834",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/report/background_city.png",
+      "published_path": "docs/assets/background-replacement/background_city.png",
+      "kind": "background_overview",
+      "size": [
+        1592,
+        1392
+      ],
+      "mode": "RGB",
+      "bytes": 2721559,
+      "sha256": "730e3afb154aa9dd61f90b458b557eb542425fa11ec67f52ec6d124ccd3c7ff2",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/report/vehicle_audi_a6l.png",
+      "published_path": "docs/assets/background-replacement/vehicle_audi_a6l.png",
+      "kind": "vehicle_comparison",
+      "size": [
+        1592,
+        1392
+      ],
+      "mode": "RGB",
+      "bytes": 3171447,
+      "sha256": "ff9fc8111697f0b601b6a768ed602628e3f4a7dcb10fdb46fec64396e33c3c2b",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/report/vehicle_bmw_4.png",
+      "published_path": "docs/assets/background-replacement/vehicle_bmw_4.png",
+      "kind": "vehicle_comparison",
+      "size": [
+        1592,
+        1392
+      ],
+      "mode": "RGB",
+      "bytes": 2989509,
+      "sha256": "1b2e62041f4c498f2ee7f1c7b2ca944d23fc1d3103dbb9c44a4fdcf23fac0a30",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/report/vehicle_yu7.png",
+      "published_path": "docs/assets/background-replacement/vehicle_yu7.png",
+      "kind": "vehicle_comparison",
+      "size": [
+        1592,
+        1392
+      ],
+      "mode": "RGB",
+      "bytes": 3084986,
+      "sha256": "7e6cff806485e7dd45ed948497342c8dd7cea9173023229bf33859551e5746e8",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/report/vehicle_honda_crv.png",
+      "published_path": "docs/assets/background-replacement/vehicle_honda_crv.png",
+      "kind": "vehicle_comparison",
+      "size": [
+        1592,
+        1392
+      ],
+      "mode": "RGB",
+      "bytes": 3017033,
+      "sha256": "9c2bfa3edbb2b416d63048604a526e1a6c0a462640856e05661448390c173ede",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/jobs/coastal__audi_a6l/edited.png",
+      "published_path": "docs/assets/background-replacement/coastal__audi_a6l.png",
+      "kind": "generated_result",
+      "size": [
+        1536,
+        1152
+      ],
+      "mode": "RGBA",
+      "bytes": 2901135,
+      "sha256": "ab80575375546c0beca722bba0b460189f888699fce249aa6d38ca30a89b65cd",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/jobs/coastal__bmw_4/edited.png",
+      "published_path": "docs/assets/background-replacement/coastal__bmw_4.png",
+      "kind": "generated_result",
+      "size": [
+        1536,
+        1152
+      ],
+      "mode": "RGBA",
+      "bytes": 2909703,
+      "sha256": "af49f860f4df7df36aa53634581f960f1d367be409612d2cdc608e5d507ed799",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/jobs/coastal__yu7/edited.png",
+      "published_path": "docs/assets/background-replacement/coastal__yu7.png",
+      "kind": "generated_result",
+      "size": [
+        1536,
+        1152
+      ],
+      "mode": "RGBA",
+      "bytes": 2887775,
+      "sha256": "d6e0bd9a6941a42d94cfbc91e90fb26459f842507ab7dbbd05ab681af6b93fbe",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/jobs/coastal__honda_crv/edited.png",
+      "published_path": "docs/assets/background-replacement/coastal__honda_crv.png",
+      "kind": "generated_result",
+      "size": [
+        1536,
+        1152
+      ],
+      "mode": "RGBA",
+      "bytes": 2954059,
+      "sha256": "32dda9605205c375fce058cb1a63ecf9b2918006ab8982b26b3b2ee2f2b8c4cd",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/jobs/autumn__audi_a6l/edited.png",
+      "published_path": "docs/assets/background-replacement/autumn__audi_a6l.png",
+      "kind": "generated_result",
+      "size": [
+        1536,
+        1152
+      ],
+      "mode": "RGBA",
+      "bytes": 3943501,
+      "sha256": "ad3c62f546ea9cf24a7f2637ba8a6d5b76f4454db759180f5c2ce62eb4bbf7df",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/jobs/autumn__bmw_4/edited.png",
+      "published_path": "docs/assets/background-replacement/autumn__bmw_4.png",
+      "kind": "generated_result",
+      "size": [
+        1536,
+        1152
+      ],
+      "mode": "RGBA",
+      "bytes": 3941446,
+      "sha256": "9246018ca1a27a842915f3aa722f03cce2271e3838026ca0a69906799c65e313",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/jobs/autumn__yu7/edited.png",
+      "published_path": "docs/assets/background-replacement/autumn__yu7.png",
+      "kind": "generated_result",
+      "size": [
+        1536,
+        1152
+      ],
+      "mode": "RGBA",
+      "bytes": 3962343,
+      "sha256": "b047c94e675940666e01b2de299e9fe124b6ba4b98fc89855b80b304a6d42581",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/jobs/autumn__honda_crv/edited.png",
+      "published_path": "docs/assets/background-replacement/autumn__honda_crv.png",
+      "kind": "generated_result",
+      "size": [
+        1536,
+        1152
+      ],
+      "mode": "RGBA",
+      "bytes": 3950843,
+      "sha256": "2bbbd68d996217480bbd27225cc898690446cb8715734be5ea1a358b8a8ba183",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/jobs/city__audi_a6l/edited.png",
+      "published_path": "docs/assets/background-replacement/city__audi_a6l.png",
+      "kind": "generated_result",
+      "size": [
+        1536,
+        1152
+      ],
+      "mode": "RGBA",
+      "bytes": 3118379,
+      "sha256": "76d1b9ceda5ea69d4e414449b45960d9593bf254783e34a6dd7c0358eae0cb7a",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/jobs/city__bmw_4/edited.png",
+      "published_path": "docs/assets/background-replacement/city__bmw_4.png",
+      "kind": "generated_result",
+      "size": [
+        1536,
+        1152
+      ],
+      "mode": "RGBA",
+      "bytes": 3073465,
+      "sha256": "5bcacdfa10143283dda3b3e4c9cb93e0b6cc7b73f9f83ea9ab837039bc1829c9",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/jobs/city__yu7/edited.png",
+      "published_path": "docs/assets/background-replacement/city__yu7.png",
+      "kind": "generated_result",
+      "size": [
+        1536,
+        1152
+      ],
+      "mode": "RGBA",
+      "bytes": 3115983,
+      "sha256": "32c119ea5acd1718f2c783896ce1c85936729eb7fc83ba72151cea75d1a59fa3",
+      "byte_identical_to_source": true
+    },
+    {
+      "source_path": "07_background_replacement/outputs/background_3x4_v1/jobs/city__honda_crv/edited.png",
+      "published_path": "docs/assets/background-replacement/city__honda_crv.png",
+      "kind": "generated_result",
+      "size": [
+        1536,
+        1152
+      ],
+      "mode": "RGBA",
+      "bytes": 3111883,
+      "sha256": "ea875795035ee6f8f805e46bc9871c7542812f3125cdd7c264a36fa775d8b133",
+      "byte_identical_to_source": true
+    }
+  ]
+}

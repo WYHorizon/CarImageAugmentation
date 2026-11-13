@@ -1,0 +1,2 @@
+# Uses the existing Qwen environment and pinned model dependencies.
+-r ../02_qwen_image_edit/requirements.txt

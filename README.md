@@ -1,6 +1,6 @@
 # CarImageAugmentation
 
-面向**细粒度车型识别**的汽车天气、光照、成像质量、构图及局部遮挡增强实验项目。目标是从车辆原图生成天气、曝光、对比度、冷暖、强光学退化，以及模糊、噪声、低分辨率、压缩、构图尺度和前景遮挡变化，同时检查车灯、格栅、车标、轮毂、车身折线和基本漆色的保留情况，为后续分类训练与鲁棒性评测提供候选数据。
+面向**细粒度车型识别**的汽车天气、光照、成像质量、构图、局部遮挡及背景替换增强实验项目。目标是从车辆原图生成天气、曝光、对比度、冷暖、强光学退化，以及模糊、噪声、低分辨率、压缩、构图尺度和前景遮挡变化，同时检查车灯、格栅、车标、轮毂、车身折线和基本漆色的保留情况，为后续分类训练与鲁棒性评测提供候选数据。背景替换使用车辆原图与环境参考进行本地 Qwen 双参考编辑。
 
 目前实现了程序化物理天气基线、本地 Qwen-Image-2.1 原图条件编辑、光照／光学退化增强、成像质量、构图与尺度增强，以及通用 RGBA 前景合成；局部遮挡另提供本地 Qwen 双参考融合，已有奥迪 A6L 和小米 YU7 的素材遮挡样例。项目处于方法探索与样图验证阶段，**尚未完成分类训练或证明增强带来的识别收益**。
 
@@ -14,6 +14,7 @@
 | 成像质量增强（清单方法 2） | NumPy/Pillow；失焦、运动模糊、粗颗粒噪声、低分辨率和 JPEG 压缩 | strong 八种预设，四车 32 张候选图，含整图、部件和短边 224 诊断 | 强档面向明显画质退化；噪声未经真实设备标定，训练收益待验证 |
 | 构图与尺度增强（清单方法 3） | NumPy/Pillow；等比放大、偏置裁剪、±12° 画面倾斜，标注同步映射 | 八种预设，四车 32 张候选图；整图、取景框及对应部件对比 | 紧裁剪允许截断，二维取景不产生真实新视角 |
 | 局部遮挡增强（清单方法 5） | CPU 通用 RGBA 合成；独立本地 Qwen 双参考融合 | 奥迪枝叶合成与骑行者融合；小米 YU7 树枝、骑行者两版 Qwen 遮挡，含整图及车头放大对比 | CPU 固定配置摆放；Qwen 可能重绘部件，无精确遮挡 mask |
+| [背景替换（清单方法 4）](docs/07_background_replacement.md) | 本地 Qwen 双参考；仅提示词引导 | 海边、秋林、城市三背景 × 四车共 12 张；提供两列分组预览及原图对比 | 允许整体缩放、位置变化；需保留车系判别特征，尚未进行分类评测 |
 
 共享样图为奥迪 A6L、宝马 4 系、小米 YU7、本田 CR-V，原图均为 3840×2880。现有 Qwen 样图尚未被判定通过严格细粒度保真验收；文件校验通过不代表车型保真或训练有效性通过。
 
@@ -21,7 +22,7 @@ Qwen 当前未接入 ControlNet，场景配置中的部件区域用于裁剪对�
 
 ## 效果对比
 
-以下总览直接复制自已有实验预览，随仓库保存在 `docs/assets/`。四车总览中，从上到下均为**奥迪 A6L、宝马 4 系、小米 YU7、本田 CR-V**，每行第一列为原图对照；单车精选图另见对应图注。
+以下图片随仓库保存在 `docs/assets/`，可在 GitHub 直接浏览。天气、光照和成像质量的分行总览，从上到下为**奥迪 A6L、宝马 4 系、小米 YU7、本田 CR-V**，每行第一列为原图；背景替换采用每行两张的 **2×2** 分组，具体顺序见各组图注。
 
 ### 物理方法：阴天湿地与降雨
 
@@ -95,6 +96,52 @@ Qwen 当前未接入 ControlNet，场景配置中的部件区域用于裁剪对�
 
 本轮 32 张主图、32 张全有效 mask、144 张原生部件裁剪和 25 张预览，共 **233 个 PNG 校验通过，27 项测试通过**。CPU 全流程耗时 149.836 秒，原图哈希未变。近景、上下偏置和倾斜完整保留主体；紧裁剪主体保留约 94.75%–95.86%，关键部件损失需单独检查。
 
+### 背景替换：三种环境与四款车
+
+本地 **Qwen-Image-2.1** 接收车辆原图和背景参考，通过提示词生成 **三背景 × 四车共 12 张 1536×1152 成图**。允许车辆整体等比缩放和平移，重点保留车灯、前脸、车身轮廓、窗线和轮毂等车系判别特征。
+
+下面按背景分组，每组均为 **2×2、每行两张**，保持原比例：左上奥迪 A6L、右上宝马 4 系、左下小米 YU7、右下本田 CR-V。每组下方可直接打开单张原尺寸 PNG。
+
+**海边日落公路**
+
+![海边日落背景替换：奥迪、宝马、小米、本田，两行两列](docs/assets/background-replacement/background_coastal.png)
+
+原尺寸成图：[奥迪 A6L](docs/assets/background-replacement/coastal__audi_a6l.png) · [宝马 4 系](docs/assets/background-replacement/coastal__bmw_4.png) · [小米 YU7](docs/assets/background-replacement/coastal__yu7.png) · [本田 CR-V](docs/assets/background-replacement/coastal__honda_crv.png)。
+
+**秋季林间公路**
+
+![秋季林间背景替换：奥迪、宝马、小米、本田，两行两列](docs/assets/background-replacement/background_autumn.png)
+
+原尺寸成图：[奥迪 A6L](docs/assets/background-replacement/autumn__audi_a6l.png) · [宝马 4 系](docs/assets/background-replacement/autumn__bmw_4.png) · [小米 YU7](docs/assets/background-replacement/autumn__yu7.png) · [本田 CR-V](docs/assets/background-replacement/autumn__honda_crv.png)。
+
+**城市高架公路**
+
+![城市高架背景替换：奥迪、宝马、小米、本田，两行两列](docs/assets/background-replacement/background_city.png)
+
+原尺寸成图：[奥迪 A6L](docs/assets/background-replacement/city__audi_a6l.png) · [宝马 4 系](docs/assets/background-replacement/city__bmw_4.png) · [小米 YU7](docs/assets/background-replacement/city__yu7.png) · [本田 CR-V](docs/assets/background-replacement/city__honda_crv.png)。
+
+**原图与三个背景的对比**
+
+以下每款车单独展示，均为 **左上原图、右上海边、左下秋林、右下城市**。原图等比缩至相同工作尺寸，方便核对车型特征和环境变化。
+
+![奥迪 A6L：原图与三个背景，两行两列](docs/assets/background-replacement/vehicle_audi_a6l.png)
+
+[查看奥迪对比大图](docs/assets/background-replacement/vehicle_audi_a6l.png)
+
+![宝马 4 系：原图与三个背景，两行两列](docs/assets/background-replacement/vehicle_bmw_4.png)
+
+[查看宝马对比大图](docs/assets/background-replacement/vehicle_bmw_4.png)
+
+![小米 YU7：原图与三个背景，两行两列](docs/assets/background-replacement/vehicle_yu7.png)
+
+[查看小米对比大图](docs/assets/background-replacement/vehicle_yu7.png)
+
+![本田 CR-V：原图与三个背景，两行两列](docs/assets/background-replacement/vehicle_honda_crv.png)
+
+[查看本田对比大图](docs/assets/background-replacement/vehicle_honda_crv.png) · [方法、提示词及复跑命令](docs/07_background_replacement.md) · [展示图片来源记录](docs/assets/background-replacement/manifest.json)。
+
+12 张均已完成文件核验与人工目视检查，主要车系造型线索仍对应原车，整车完整、接地总体可接受。小字和微纹理仍有重绘，部分旧环境反射未消除，城市组的车体亮度仍偏原日间状态；**尚未使用车系分类器验证识别结果**。此处仅调整展示和归档，成图未重新生成或贴回原车像素。
+
 ### 局部遮挡：用户枝叶素材与奥迪单图演示
 
 使用用户提供的 1000×707 枝叶图作为前景，叠加在奥迪 A6L 原图上。素材原文件是带白灰棋盘图案的 RGB 图片，需先通过专用浅色棋盘去底得到真正的 RGBA；普通透明 PNG 可直接复用合成引擎。当前展示 **1 张 3840×2880 演示主图**。
@@ -156,6 +203,7 @@ CarImageAugmentation/
 │   ├── 04_imaging_quality.md
 │   ├── 05_composition_scale.md
 │   ├── 06_local_occlusion.md
+│   ├── 07_background_replacement.md
 │   ├── 03_sdxl_controlnet_ipadapter.md
 │   ├── generative_weather_plan.md
 │   ├── research_proposal.md
@@ -199,16 +247,25 @@ CarImageAugmentation/
 │   ├── run.py                       # CPU 生成、几何诊断与报告入口
 │   ├── requirements.txt
 │   └── outputs/                     # 主图、有效 mask、裁剪与运行清单
-└── 06_local_occlusion/               # 清单方法 5：RGBA 与 Qwen 局部遮挡
-    ├── assets/                      # 用户枝叶／骑行者素材、RGBA 与准备记录
-    ├── configs/                     # CPU 摆放参数及 Qwen 双参考融合配置
-    ├── occlusion/                   # 素材去底、通用合成、遮挡统计与报告
-    ├── tests/                       # 合成、素材、输入保护与裁剪核验
-    ├── prepare_asset.py             # 准备真正的透明素材
-    ├── run.py                       # 单图合成与报告入口
-    ├── run_qwen.py                  # 本地 Qwen 双参考融合与部件对比
+├── 06_local_occlusion/               # 清单方法 5：RGBA 与 Qwen 局部遮挡
+│   ├── assets/                      # 用户枝叶／骑行者素材、RGBA 与准备记录
+│   ├── configs/                     # CPU 摆放参数及 Qwen 双参考融合配置
+│   ├── occlusion/                   # 素材去底、通用合成、遮挡统计与报告
+│   ├── tests/                       # 合成、素材、输入保护与裁剪核验
+│   ├── prepare_asset.py             # 准备真正的透明素材
+│   ├── run.py                       # 单图合成与报告入口
+│   ├── run_qwen.py                  # 本地 Qwen 双参考融合与部件对比
+│   ├── requirements.txt
+│   └── outputs/                     # 主图、遮挡 mask、裁剪与运行清单
+└── 07_background_replacement/        # 清单方法 4：Qwen 提示词背景替换
+    ├── assets/backgrounds/          # 三张用户背景原图及来源记录
+    ├── configs/                     # 车辆、背景与推理参数
+    ├── prompts/                     # 用户原提示词与构图约束版本
+    ├── run.py                       # 双参考离线推理与部件对比
+    ├── run_batch.py                 # 按配置串行生成背景与车辆组合
+    ├── build_report.py              # 两列分组图与本地原尺寸图库
     ├── requirements.txt
-    └── outputs/                     # 主图、遮挡 mask、裁剪与运行清单
+    └── outputs/                     # 生成结果、输入快照、对比与运行清单
 ```
 
 仓库包含代码、配置、文档、测试原图及 `docs/assets/` 中的精选预览图。`models/`、各方法的 `outputs/`、Python 缓存与虚拟环境由 `.gitignore` 排除，克隆后需另行准备权重并生成完整结果。README 中的精选预览可直接浏览；详细文档中指向历史 `outputs/` 的图片链接仍需对应本地输出。

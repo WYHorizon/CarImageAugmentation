@@ -1,0 +1,60 @@
+{
+  "saved_date": "2026-11-13",
+  "source": "User-provided image attachments, in the order received.",
+  "purpose": "Background reference images for local Qwen prompt-based vehicle background replacement.",
+  "preservation": "Original attachment bytes copied without resizing, cropping, colour conversion or re-encoding.",
+  "authenticity": "User-provided background references; photographic origin or real-scene authenticity has not been independently verified.",
+  "assets": [
+    {
+      "order": 1,
+      "label": "海边公路",
+      "source_attachment_path": "/root/.codex/attachments/0032ee11-0fc1-4038-aa13-b9c8a5a344c7/codex-clipboard-3175d324-0589-4d5f-8655-282fdccc025a.png",
+      "source_attachment_filename": "codex-clipboard-3175d324-0589-4d5f-8655-282fdccc025a.png",
+      "project_relative_path": "07_background_replacement/assets/backgrounds/01_coastal_road.png",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "size_bytes": 2754378,
+      "sha256": "ea1d76df1eb70b8c80bfe20a588d9b855bc13a58b940ba7c9df44d2197e6c9e4",
+      "source_sha256": "ea1d76df1eb70b8c80bfe20a588d9b855bc13a58b940ba7c9df44d2197e6c9e4",
+      "byte_identical_to_source": true
+    },
+    {
+      "order": 2,
+      "label": "秋季林间公路",
+      "source_attachment_path": "/root/.codex/attachments/cfc43eaa-3a3d-4a20-998e-e952c30d0722/codex-clipboard-078134af-9257-4800-8e6a-70300e698338.png",
+      "source_attachment_filename": "codex-clipboard-078134af-9257-4800-8e6a-70300e698338.png",
+      "project_relative_path": "07_background_replacement/assets/backgrounds/02_autumn_forest_road.png",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "size_bytes": 3546950,
+      "sha256": "f95714d50361b6206442d8e9cdfe3653aa96edb9ef84b861a95b8d5734eb4b28",
+      "source_sha256": "f95714d50361b6206442d8e9cdfe3653aa96edb9ef84b861a95b8d5734eb4b28",
+      "byte_identical_to_source": true
+    },
+    {
+      "order": 3,
+      "label": "城市高架公路",
+      "source_attachment_path": "/root/.codex/attachments/a65a63c3-507b-48aa-82d4-157bb8ed6cda/codex-clipboard-6dde4bcd-fb90-4599-941c-2f8ea4d59371.png",
+      "source_attachment_filename": "codex-clipboard-6dde4bcd-fb90-4599-941c-2f8ea4d59371.png",
+      "project_relative_path": "07_background_replacement/assets/backgrounds/03_city_elevated_road.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "size_bytes": 2856203,
+      "sha256": "7f7fb54f8d27950b98bdb2b0830ca28359f13313f0476e0221b721fe3e646254",
+      "source_sha256": "7f7fb54f8d27950b98bdb2b0830ca28359f13313f0476e0221b721fe3e646254",
+      "byte_identical_to_source": true
+    }
+  ]
+}

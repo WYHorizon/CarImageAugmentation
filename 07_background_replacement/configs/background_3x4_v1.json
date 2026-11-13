@@ -1,0 +1,114 @@
+{
+  "label": "Three backgrounds × four vehicle models | Qwen prompt-only replacement",
+  "acceptance": "Vehicle position and uniform scale may change. Preserve model-series design cues; no classification evaluation performed.",
+  "jobs": [
+    {
+      "id": "coastal__audi_a6l",
+      "vehicle_id": "audi_a6l",
+      "vehicle_label": "Audi A6L",
+      "vehicle_name": "奥迪A6L",
+      "background_id": "coastal",
+      "background_label": "海边日落公路",
+      "config": "07_background_replacement/configs/background_3x4_v1/coastal__audi_a6l.json"
+    },
+    {
+      "id": "coastal__bmw_4",
+      "vehicle_id": "bmw_4",
+      "vehicle_label": "BMW 4 Series",
+      "vehicle_name": "宝马4系",
+      "background_id": "coastal",
+      "background_label": "海边日落公路",
+      "config": "07_background_replacement/configs/background_3x4_v1/coastal__bmw_4.json"
+    },
+    {
+      "id": "coastal__yu7",
+      "vehicle_id": "yu7",
+      "vehicle_label": "Xiaomi YU7",
+      "vehicle_name": "小米YU7",
+      "background_id": "coastal",
+      "background_label": "海边日落公路",
+      "config": "07_background_replacement/configs/background_3x4_v1/coastal__yu7.json"
+    },
+    {
+      "id": "coastal__honda_crv",
+      "vehicle_id": "honda_crv",
+      "vehicle_label": "Honda CR-V",
+      "vehicle_name": "本田CR-V",
+      "background_id": "coastal",
+      "background_label": "海边日落公路",
+      "config": "07_background_replacement/configs/background_3x4_v1/coastal__honda_crv.json"
+    },
+    {
+      "id": "autumn__audi_a6l",
+      "vehicle_id": "audi_a6l",
+      "vehicle_label": "Audi A6L",
+      "vehicle_name": "奥迪A6L",
+      "background_id": "autumn",
+      "background_label": "秋季林间公路",
+      "config": "07_background_replacement/configs/background_3x4_v1/autumn__audi_a6l.json"
+    },
+    {
+      "id": "autumn__bmw_4",
+      "vehicle_id": "bmw_4",
+      "vehicle_label": "BMW 4 Series",
+      "vehicle_name": "宝马4系",
+      "background_id": "autumn",
+      "background_label": "秋季林间公路",
+      "config": "07_background_replacement/configs/background_3x4_v1/autumn__bmw_4.json"
+    },
+    {
+      "id": "autumn__yu7",
+      "vehicle_id": "yu7",
+      "vehicle_label": "Xiaomi YU7",
+      "vehicle_name": "小米YU7",
+      "background_id": "autumn",
+      "background_label": "秋季林间公路",
+      "config": "07_background_replacement/configs/background_3x4_v1/autumn__yu7.json"
+    },
+    {
+      "id": "autumn__honda_crv",
+      "vehicle_id": "honda_crv",
+      "vehicle_label": "Honda CR-V",
+      "vehicle_name": "本田CR-V",
+      "background_id": "autumn",
+      "background_label": "秋季林间公路",
+      "config": "07_background_replacement/configs/background_3x4_v1/autumn__honda_crv.json"
+    },
+    {
+      "id": "city__audi_a6l",
+      "vehicle_id": "audi_a6l",
+      "vehicle_label": "Audi A6L",
+      "vehicle_name": "奥迪A6L",
+      "background_id": "city",
+      "background_label": "城市高架公路",
+      "config": "07_background_replacement/configs/background_3x4_v1/city__audi_a6l.json"
+    },
+    {
+      "id": "city__bmw_4",
+      "vehicle_id": "bmw_4",
+      "vehicle_label": "BMW 4 Series",
+      "vehicle_name": "宝马4系",
+      "background_id": "city",
+      "background_label": "城市高架公路",
+      "config": "07_background_replacement/configs/background_3x4_v1/city__bmw_4.json"
+    },
+    {
+      "id": "city__yu7",
+      "vehicle_id": "yu7",
+      "vehicle_label": "Xiaomi YU7",
+      "vehicle_name": "小米YU7",
+      "background_id": "city",
+      "background_label": "城市高架公路",
+      "config": "07_background_replacement/configs/background_3x4_v1/city__yu7.json"
+    },
+    {
+      "id": "city__honda_crv",
+      "vehicle_id": "honda_crv",
+      "vehicle_label": "Honda CR-V",
+      "vehicle_name": "本田CR-V",
+      "background_id": "city",
+      "background_label": "城市高架公路",
+      "config": "07_background_replacement/configs/background_3x4_v1/city__honda_crv.json"
+    }
+  ]
+}

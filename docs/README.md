@@ -14,6 +14,7 @@
 | [成像质量增强](04_imaging_quality.md) | 清单方法 2：保留两档失焦，加强运动、粗颗粒、低分辨率和 JPEG；basic／strong 各八种预设及整图／部件对比 |
 | [构图与尺度增强](05_composition_scale.md) | 清单方法 3：四车八预设共 32 张主图，233 PNG 核验与 27 项测试通过；车辆及部件标注同步映射 |
 | [局部遮挡增强](06_local_occlusion.md) | 清单方法 5：通用 RGBA 合成与本地 Qwen 双参考融合；奥迪样例、小米 YU7 树枝／骑行者两版，含整图、车头与部件对比、配置及复跑方法 |
+| [背景替换](07_background_replacement.md) | 清单方法 4：仅本地 Qwen 与提示词，三背景 × 四车共 12 张；GitHub 可浏览两列效果预览、四车原图对比及原尺寸成图，附车系特征检查 |
 | [SDXL 结构与参考条件对照](03_sdxl_controlnet_ipadapter.md) | 暂缓的备选路线；仅完成方案及接口核查，尚未部署权重 |
 | [生成模型方案](generative_weather_plan.md) | Qwen、SDXL 等模型选择、结构控制与实验验收流程 |
 | [论文选题与最小验证方案](research_proposal.md) | 相关工作重复风险、判别部件保真天气增强候选、真实分类评测与逐步验证；尚未实现新算法 |
@@ -32,6 +33,7 @@ CarImageAugmentation/
 │   ├── 04_imaging_quality.md
 │   ├── 05_composition_scale.md
 │   ├── 06_local_occlusion.md
+│   ├── 07_background_replacement.md
 │   ├── 03_sdxl_controlnet_ipadapter.md
 │   ├── generative_weather_plan.md
 │   └── research_proposal.md
@@ -73,19 +75,28 @@ CarImageAugmentation/
 │   ├── outputs/
 │   ├── run.py
 │   └── requirements.txt
-└── 06_local_occlusion/       # 清单方法 5：RGBA 与 Qwen 局部遮挡
-    ├── assets/
+├── 06_local_occlusion/       # 清单方法 5：RGBA 与 Qwen 局部遮挡
+│   ├── assets/
+│   ├── configs/
+│   ├── occlusion/
+│   ├── tests/
+│   ├── outputs/
+│   ├── prepare_asset.py
+│   ├── run.py
+│   ├── run_qwen.py
+│   └── requirements.txt
+└── 07_background_replacement/ # 清单方法 4：Qwen 背景替换
+    ├── assets/backgrounds/
     ├── configs/
-    ├── occlusion/
-    ├── tests/
+    ├── prompts/
     ├── outputs/
-    ├── prepare_asset.py
     ├── run.py
-    ├── run_qwen.py
+    ├── run_batch.py
+    ├── build_report.py
     └── requirements.txt
 ```
 
-方法目录编号表示建立顺序；`04_imaging_quality/`、`05_composition_scale/`、`06_local_occlusion/` 分别对应增强清单中的方法 2、3、5，与文档中的 SDXL 备选方案没有从属关系。
+方法目录编号表示建立顺序；`04_imaging_quality/`、`05_composition_scale/`、`06_local_occlusion/` 分别对应增强清单中的方法 2、3、5；`07_background_replacement/` 对应方法 4，与文档中的 SDXL 备选方案没有从属关系。
 
 这种布局适合比较多种方法：方法内部独立运行，生成结果不会混在一起，共享原图又能保证各方法使用相同输入。不要在各方法目录中重复拷贝数据集；后续如果需要正式训练集，可以再增加共享 `datasets/`，并按原始照片/拍摄组统一划分训练、验证与测试。
 

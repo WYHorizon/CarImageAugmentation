@@ -1,0 +1,31 @@
+{
+  "input_image": "test_images/小米YU7.jpg",
+  "reference_image": "07_background_replacement/assets/backgrounds/01_coastal_road.png",
+  "model_dir": "models/Qwen-Image-2.1",
+  "model_revision": "d26bb61231c349cf6b7896fa83353113880e1ba3",
+  "scene_config": "01_physics_based/configs/scenes.json",
+  "width": 1536,
+  "height": 1152,
+  "seed": 42,
+  "num_inference_steps": 40,
+  "true_cfg_scale": 1.0,
+  "use_kv_cache": true,
+  "vae_tiling": false,
+  "preview_label": "Coastal road background | user prompt | two references",
+  "prompt": "主体保护：\n将图1中的绿色小米YU7汽车作为唯一需要保留的前景主体，尽可能保持其原始视觉像素与外观特征。严格保留车辆的车身轮廓、绿色车漆、车头造型、车灯、格栅、轮毂、轮胎、刹车卡钳、车窗、后视镜、车标、车牌及所有可见细节。保持车辆原有大小、位置、比例、朝向、拍摄视角和透视关系。不重新生成汽车，不改变车辆设计，不添加或删除车辆部件。\n\n背景替换：\n仅替换图1中汽车以外的道路、建筑、树木、天空及其他环境区域。使用图2作为新的真实环境背景，背景视觉内容与图1原始场景明显不同。以图1为输出构图基准，不移动、不旋转、不缩放汽车；可适当调整新背景的位置与透视，使道路平面与车辆轮胎接地点自然匹配。\n\n融合要求：\n保持车轮与道路真实接触，在轮胎下方生成合理的接触阴影和柔和的车底投影。使新背景的光照方向、色温、对比度与车辆原有光照尽量一致。只允许对车辆边缘、接地阴影和车漆环境反射做极其轻微的协调，避免明显修改车体本身。准确处理轮胎、玻璃、后视镜及车身边缘，避免白边、光晕、模糊、锯齿、穿帮和悬浮。\n\n输出要求：\n真实汽车摄影效果，无AI生成感，不改变主体车辆，不新增其他车辆或人物。保留原始车辆的全部可见细节与原始画面构图，最终结果像同一台车在新环境中真实拍摄的照片",
+  "prompt_provenance": {
+    "source": "User supplied four-section prompt, wording preserved; backslash formatting replaced with paragraph breaks.",
+    "readable_copy": "07_background_replacement/prompts/yu7_coastal_v1.txt"
+  },
+  "edit_intent": {
+    "reference_order": [
+      "original Xiaomi YU7 photograph",
+      "first user background: coastal road"
+    ],
+    "preserve_vehicle_geometry": true,
+    "preserve_source_aspect_ratio": "4:3",
+    "background_reference_preserves_own_aspect_ratio": true,
+    "vehicle_pixel_lock_implemented": false,
+    "implementation": "Qwen only, prompt guidance; no masks, extraction, paste-back or other model."
+  }
+}

@@ -191,20 +191,40 @@ Qwen 当前未接入 ControlNet，场景配置中的部件区域用于裁剪对�
 
 ### 宝马 5 系的 3D 模型与街景融合
 
-下图从同一个宝马 5 系模型渲染，依次为前侧、侧面和后侧。[下载模型（GLB，8.2 MiB）](08_3d_probe/bmw5/bmw5.glb)
+#### 从八张棚拍照片到可旋转模型
 
-![宝马 5 系最终模型的前侧、侧面和后侧](docs/assets/bmw5/three-views.jpg)
+先用 **U²-Net** 从棚拍照片中分割出车辆，再将上排的正前、左侧、正后和右侧四张前景输入 **Hunyuan3D-2mv**，生成约 122 万个三角面的初始网格。贴图时再加入下排四个斜视角，八张照片共同提供车身外观。[原始棚拍照片](test_images/宝马5系) · [四视图几何生成记录](08_3d_probe/multiview_probe/README.md)
 
-六个场景各展示两张融合成图。左列使用宝马 5 系 3D 模型渲染，右列使用宝马 525Li 环绕图选帧。雪景中车头朝右，车顶和机盖上可见积雪。
+[![宝马 5 系的八张建模照片，上排四个正向视图，下排四个斜视角](docs/assets/bmw5/model-inputs.jpg)](docs/assets/bmw5/model-inputs.jpg)
 
-| 街景 | 3D 模型渲染后融合 | 525Li 环绕图选帧后融合 |
-| --- | --- | --- |
-| 商铺街 | [![商铺街模型融合成图](docs/assets/bmw5/shopping-glb.png)](docs/assets/bmw5/shopping-glb.png) | [![商铺街第 04 帧融合成图](docs/assets/bmw5/shopping-frame.png)](docs/assets/bmw5/shopping-frame.png) |
-| 居民街 | [![居民街模型融合成图](docs/assets/bmw5/residential-glb.png)](docs/assets/bmw5/residential-glb.png) | [![居民街第 06 帧融合成图](docs/assets/bmw5/residential-frame.png)](docs/assets/bmw5/residential-frame.png) |
-| 麓山南路 | [![麓山南路模型融合成图](docs/assets/bmw5/lushan-south-road-glb.png)](docs/assets/bmw5/lushan-south-road-glb.png) | [![麓山南路第 02 帧融合成图](docs/assets/bmw5/lushan-south-road-frame.png)](docs/assets/bmw5/lushan-south-road-frame.png) |
-| 晴日林荫车道 | [![晴日林荫车道模型融合成图](docs/assets/bmw5/sunlit-canopy-glb.png)](docs/assets/bmw5/sunlit-canopy-glb.png) | [![晴日林荫车道第 24 帧融合成图](docs/assets/bmw5/sunlit-canopy-frame.png)](docs/assets/bmw5/sunlit-canopy-frame.png) |
-| 红砖楼旁道路 | [![红砖楼旁道路模型融合成图](docs/assets/bmw5/red-brick-drive-glb.png)](docs/assets/bmw5/red-brick-drive-glb.png) | [![红砖楼旁道路第 02 帧融合成图](docs/assets/bmw5/red-brick-drive-frame.png)](docs/assets/bmw5/red-brick-drive-frame.png) |
-| 雪后铺装路面 | [![雪后铺装路面模型融合成图](docs/assets/bmw5/snowy-paving-glb.png)](docs/assets/bmw5/snowy-paving-glb.png) | [![雪后铺装路面第 09 帧融合成图](docs/assets/bmw5/snowy-paving-frame.png)](docs/assets/bmw5/snowy-paving-frame.png) |
+**四视图生成的灰模。** 从前侧可以看到格栅、轮拱的大致形状，从后侧可以看到尾灯轮廓和后备厢盖的起伏。下图和成品都从 32°、90°、148° 三个方位渲染，便于对照。
+
+[![宝马无贴图网格在前侧 32°、侧面 90° 和后侧 148° 的渲染](docs/assets/bmw5/geometry-three-views.jpg)](docs/assets/bmw5/geometry-three-views.jpg)
+
+**照片贴图后的发布模型。** 分别拟合八张照片的相机，将每个部位在照片中可见的像素投影到同一张纹理上，保留灯组、轮毂、车标和展示牌的图案。模型经过接缝修复，玻璃采用浅青灰色日光外观。车顶和后备厢盖在照片覆盖不足或贴图破碎的区域做了局部修整，高机位下的外观仍有估计成分。[照片贴图方法](08_3d_probe/photo_texture/README.md) · [下载模型（GLB，8.2 MiB）](08_3d_probe/bmw5/bmw5.glb)
+
+[![最终宝马 5 系模型在前侧 32°、侧面 90° 和后侧 148° 的渲染](docs/assets/bmw5/three-views.jpg)](docs/assets/bmw5/three-views.jpg)
+
+#### 六个街景的选图与融合结果
+
+每个场景的上行是融合前的车辆，下行是对应成图。左边用 **Three.js** 从同一个 GLB 按场景机位渲染，角度以车头为 0°、车尾为 180°，正负号区分车身两侧。右边来自另一组宝马 525Li 碳黑色环绕照片，可以点击缩略图查看所选原帧。
+
+按路面透视摆放车辆并生成接地阴影后，用本地 **Qwen-Image-2.1** 同时参考摆好车的底图和原始街景，协调车身亮度、色调与地面阴影。雪景沿用车头朝右的构图，可以对照上、下两行看车顶和机盖上新增的积雪。点击场景名可查看空背景。[街景融合与商铺街复跑](07_background_replacement/bmw_street/README.md)
+
+| 场景 | 宝马 5 系 · 3D 模型 | 宝马 525Li · 环绕图 |
+| --- | :---: | :---: |
+| **[商铺街](07_background_replacement/assets/backgrounds/04_neighborhood_shopping_street.png)**<br>选定视角 | [<img src="docs/assets/bmw5/selected-views/shopping-glb.jpg" width="224" alt="商铺街所选 GLB 机位，方位角 +13°">](docs/assets/bmw5/selected-views/shopping-glb.jpg)<br>方位角 +13° | [<img src="docs/assets/bmw5/selected-views/frame-04.jpg" width="224" alt="商铺街所选 525Li 环绕图，第 04 帧">](bmw_img/bmw-2026-525li-carbon-black-360/04.webp)<br>第 04 帧 |
+| 融合成图 | [<img src="docs/assets/bmw5/shopping-glb.png" width="350" alt="商铺街模型融合成图">](docs/assets/bmw5/shopping-glb.png) | [<img src="docs/assets/bmw5/shopping-frame.png" width="350" alt="商铺街第 04 帧融合成图">](docs/assets/bmw5/shopping-frame.png) |
+| **[居民街](07_background_replacement/assets/backgrounds/05_residential_street.png)**<br>选定视角 | [<img src="docs/assets/bmw5/selected-views/residential-glb.jpg" width="224" alt="居民街所选 GLB 机位，方位角 −13°">](docs/assets/bmw5/selected-views/residential-glb.jpg)<br>方位角 −13° | [<img src="docs/assets/bmw5/selected-views/frame-06.jpg" width="224" alt="居民街所选 525Li 环绕图，第 06 帧">](bmw_img/bmw-2026-525li-carbon-black-360/06.webp)<br>第 06 帧 |
+| 融合成图 | [<img src="docs/assets/bmw5/residential-glb.png" width="350" alt="居民街模型融合成图">](docs/assets/bmw5/residential-glb.png) | [<img src="docs/assets/bmw5/residential-frame.png" width="350" alt="居民街第 06 帧融合成图">](docs/assets/bmw5/residential-frame.png) |
+| **[麓山南路](07_background_replacement/assets/backgrounds/06_tree_lined_avenue.png)**<br>选定视角 | [<img src="docs/assets/bmw5/selected-views/lushan-south-road-glb.jpg" width="224" alt="麓山南路所选 GLB 机位，方位角 +22°">](docs/assets/bmw5/selected-views/lushan-south-road-glb.jpg)<br>方位角 +22° | [<img src="docs/assets/bmw5/selected-views/frame-02.jpg" width="224" alt="麓山南路所选 525Li 环绕图，第 02 帧">](bmw_img/bmw-2026-525li-carbon-black-360/02.webp)<br>第 02 帧 |
+| 融合成图 | [<img src="docs/assets/bmw5/lushan-south-road-glb.png" width="350" alt="麓山南路模型融合成图">](docs/assets/bmw5/lushan-south-road-glb.png) | [<img src="docs/assets/bmw5/lushan-south-road-frame.png" width="350" alt="麓山南路第 02 帧融合成图">](docs/assets/bmw5/lushan-south-road-frame.png) |
+| **[晴日林荫车道](07_background_replacement/assets/backgrounds/07_sunlit_canopy_road.png)**<br>选定视角 | [<img src="docs/assets/bmw5/selected-views/sunlit-canopy-glb.jpg" width="224" alt="晴日林荫车道所选 GLB 机位，方位角 +170°">](docs/assets/bmw5/selected-views/sunlit-canopy-glb.jpg)<br>方位角 +170° | [<img src="docs/assets/bmw5/selected-views/frame-24.jpg" width="224" alt="晴日林荫车道所选 525Li 环绕图，第 24 帧">](bmw_img/bmw-2026-525li-carbon-black-360/24.webp)<br>第 24 帧 |
+| 融合成图 | [<img src="docs/assets/bmw5/sunlit-canopy-glb.png" width="350" alt="晴日林荫车道模型融合成图">](docs/assets/bmw5/sunlit-canopy-glb.png) | [<img src="docs/assets/bmw5/sunlit-canopy-frame.png" width="350" alt="晴日林荫车道第 24 帧融合成图">](docs/assets/bmw5/sunlit-canopy-frame.png) |
+| **[红砖楼旁道路](07_background_replacement/assets/backgrounds/08_red_brick_drive.png)**<br>选定视角 | [<img src="docs/assets/bmw5/selected-views/red-brick-drive-glb.jpg" width="224" alt="红砖楼旁道路所选 GLB 机位，方位角 +25°">](docs/assets/bmw5/selected-views/red-brick-drive-glb.jpg)<br>方位角 +25° | [<img src="docs/assets/bmw5/selected-views/frame-02.jpg" width="224" alt="红砖楼旁道路所选 525Li 环绕图，第 02 帧">](bmw_img/bmw-2026-525li-carbon-black-360/02.webp)<br>第 02 帧 |
+| 融合成图 | [<img src="docs/assets/bmw5/red-brick-drive-glb.png" width="350" alt="红砖楼旁道路模型融合成图">](docs/assets/bmw5/red-brick-drive-glb.png) | [<img src="docs/assets/bmw5/red-brick-drive-frame.png" width="350" alt="红砖楼旁道路第 02 帧融合成图">](docs/assets/bmw5/red-brick-drive-frame.png) |
+| **[雪后铺装路面](07_background_replacement/assets/backgrounds/09_snowy_paving.png)**<br>选定视角 | [<img src="docs/assets/bmw5/selected-views/snowy-paving-glb.jpg" width="224" alt="雪后铺装路面所选 GLB 机位，方位角 −54°">](docs/assets/bmw5/selected-views/snowy-paving-glb.jpg)<br>方位角 −54° | [<img src="docs/assets/bmw5/selected-views/frame-09.jpg" width="224" alt="雪后铺装路面所选 525Li 环绕图，第 09 帧">](bmw_img/bmw-2026-525li-carbon-black-360/09.webp)<br>第 09 帧 |
+| 融合成图 | [<img src="docs/assets/bmw5/snowy-paving-glb.png" width="350" alt="雪后铺装路面模型融合成图">](docs/assets/bmw5/snowy-paving-glb.png) | [<img src="docs/assets/bmw5/snowy-paving-frame.png" width="350" alt="雪后铺装路面第 09 帧融合成图">](docs/assets/bmw5/snowy-paving-frame.png) |
 
 ## 目录结构
 

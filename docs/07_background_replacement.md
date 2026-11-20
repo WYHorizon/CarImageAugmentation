@@ -12,7 +12,7 @@
 
 ## 新增宝马街景
 
-商铺街和居民街均已用宝马 GLB 渲染与 525Li 环绕帧完成融合。可查看两种来源的原尺寸结果，并复跑商铺街的模型版本。[宝马街景对照与复跑](../07_background_replacement/bmw_street/README.md)
+商铺街、居民街和麓山南路均已用宝马 GLB 渲染与 525Li 环绕帧完成融合。可查看两种来源的原尺寸结果，并复跑商铺街的模型版本。[宝马街景对照与复跑](../07_background_replacement/bmw_street/README.md)
 
 ## 效果与原图对比
 

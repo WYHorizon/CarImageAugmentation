@@ -82,6 +82,22 @@
       "sha256": "021dc04d7f7fcfed7e761858fbae56a3b43bc012371327f7fe704e28ae1d2af7",
       "source_sha256": "021dc04d7f7fcfed7e761858fbae56a3b43bc012371327f7fe704e28ae1d2af7",
       "byte_identical_to_source": true
+    },
+    {
+      "order": 6,
+      "label": "麓山南路",
+      "source_attachment_filename": "codex-clipboard-48c100a4-0c62-4946-838b-56e6350fac57.png",
+      "project_relative_path": "07_background_replacement/assets/backgrounds/06_tree_lined_avenue.png",
+      "size": [
+        1024,
+        1365
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "size_bytes": 2497550,
+      "sha256": "a2b67ba34ab257c3734b49940013c29b727d6b1cbb06d46bdb05476ef8647aff",
+      "source_sha256": "a2b67ba34ab257c3734b49940013c29b727d6b1cbb06d46bdb05476ef8647aff",
+      "byte_identical_to_source": true
     }
   ]
 }

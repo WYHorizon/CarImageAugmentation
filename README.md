@@ -15,7 +15,7 @@
 | 构图与尺度增强（清单方法 3） | NumPy/Pillow；等比放大、偏置裁剪、±12° 画面倾斜，标注同步映射 | 八种预设，四车 32 张候选图；整图、取景框及对应部件对比 | 紧裁剪允许截断，二维取景不产生真实新视角 |
 | 局部遮挡增强（清单方法 5） | CPU 通用 RGBA 合成；独立本地 Qwen 双参考融合 | 奥迪枝叶合成与骑行者融合；小米 YU7 树枝、骑行者两版 Qwen 遮挡，含整图及车头放大对比 | CPU 固定配置摆放；Qwen 可能重绘部件，无精确遮挡 mask |
 | [背景替换（清单方法 4）](docs/07_background_replacement.md) | 本地 Qwen 双参考；仅提示词引导 | 海边、秋林、城市三背景 × 四车共 12 张；提供两列分组预览及原图对比 | 允许整体缩放、位置变化；需保留车系判别特征，尚未进行分类评测 |
-| [宝马多视图建模](08_3d_probe/bmw5/README.md) | Hunyuan3D-2mv 几何、八图照片贴图与分部位修复 | 可旋转 GLB、连续选角度、三组街景对照 | 高机位和未观测表面缺少真实参考，车型保真与训练收益尚待验证 |
+| [宝马多视图建模](08_3d_probe/bmw5/README.md) | Hunyuan3D-2mv 几何、八图照片贴图与分部位修复 | 可旋转 GLB、连续选角度、六组街景对照 | 高机位和未观测表面缺少真实参考，车型保真与训练收益尚待验证 |
 
 早期二维方法的共享样图为奥迪 A6L、宝马 4 系、小米 YU7、本田 CR-V，原图均为 3840×2880。现有 Qwen 样图尚未被判定通过严格细粒度保真验收；文件校验通过不代表车型保真或训练有效性通过。
 
@@ -195,13 +195,16 @@ Qwen 当前未接入 ControlNet，场景配置中的部件区域用于裁剪对�
 
 ![宝马 5 系最终模型的前侧、侧面和后侧](docs/assets/bmw5/three-views.jpg)
 
-商铺街、居民街和麓山南路各展示两张融合成图。左列使用宝马 5 系 3D 模型渲染，右列使用宝马 525Li 环绕图选帧。
+六个场景各展示两张融合成图。左列使用宝马 5 系 3D 模型渲染，右列使用宝马 525Li 环绕图选帧。雪景中车头朝右，车顶和机盖上可见积雪。
 
 | 街景 | 3D 模型渲染后融合 | 525Li 环绕图选帧后融合 |
 | --- | --- | --- |
 | 商铺街 | [![商铺街模型融合成图](docs/assets/bmw5/shopping-glb.png)](docs/assets/bmw5/shopping-glb.png) | [![商铺街第 04 帧融合成图](docs/assets/bmw5/shopping-frame.png)](docs/assets/bmw5/shopping-frame.png) |
 | 居民街 | [![居民街模型融合成图](docs/assets/bmw5/residential-glb.png)](docs/assets/bmw5/residential-glb.png) | [![居民街第 06 帧融合成图](docs/assets/bmw5/residential-frame.png)](docs/assets/bmw5/residential-frame.png) |
 | 麓山南路 | [![麓山南路模型融合成图](docs/assets/bmw5/lushan-south-road-glb.png)](docs/assets/bmw5/lushan-south-road-glb.png) | [![麓山南路第 02 帧融合成图](docs/assets/bmw5/lushan-south-road-frame.png)](docs/assets/bmw5/lushan-south-road-frame.png) |
+| 晴日林荫车道 | [![晴日林荫车道模型融合成图](docs/assets/bmw5/sunlit-canopy-glb.png)](docs/assets/bmw5/sunlit-canopy-glb.png) | [![晴日林荫车道第 24 帧融合成图](docs/assets/bmw5/sunlit-canopy-frame.png)](docs/assets/bmw5/sunlit-canopy-frame.png) |
+| 红砖楼旁道路 | [![红砖楼旁道路模型融合成图](docs/assets/bmw5/red-brick-drive-glb.png)](docs/assets/bmw5/red-brick-drive-glb.png) | [![红砖楼旁道路第 02 帧融合成图](docs/assets/bmw5/red-brick-drive-frame.png)](docs/assets/bmw5/red-brick-drive-frame.png) |
+| 雪后铺装路面 | [![雪后铺装路面模型融合成图](docs/assets/bmw5/snowy-paving-glb.png)](docs/assets/bmw5/snowy-paving-glb.png) | [![雪后铺装路面第 09 帧融合成图](docs/assets/bmw5/snowy-paving-frame.png)](docs/assets/bmw5/snowy-paving-frame.png) |
 
 ## 目录结构
 

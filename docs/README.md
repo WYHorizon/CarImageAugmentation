@@ -16,7 +16,7 @@
 | [局部遮挡增强](06_local_occlusion.md) | 清单方法 5：通用 RGBA 合成与本地 Qwen 双参考融合；奥迪样例、小米 YU7 树枝／骑行者两版，含整图、车头与部件对比、配置及复跑方法 |
 | [背景替换](07_background_replacement.md) | 清单方法 4：仅本地 Qwen 与提示词，三背景 × 四车共 12 张；GitHub 可浏览两列效果预览、四车原图对比及原尺寸成图，附车系特征检查 |
 | [宝马 5 系模型与修复](../08_3d_probe/bmw5/README.md) | 四图建模、八图贴图、接缝与部件修复、GLB 下载和新视角导出 |
-| [宝马街景融合](../07_background_replacement/bmw_street/README.md) | 两种前景来源、三处街景与商铺街复跑 |
+| [宝马街景融合](../07_background_replacement/bmw_street/README.md) | 两种前景来源、六组街景对照与商铺街复跑 |
 | [反光清理实验](../09_reflection_cleanup/README.md) | Qwen 局部修复、二维保护和固定网格纹理替换 |
 | [SDXL 结构与参考条件对照](03_sdxl_controlnet_ipadapter.md) | 暂缓的备选路线；仅完成方案及接口核查，尚未部署权重 |
 | [生成模型方案](generative_weather_plan.md) | Qwen、SDXL 等模型选择、结构控制与实验验收流程 |

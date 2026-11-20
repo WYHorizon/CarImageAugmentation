@@ -98,6 +98,54 @@
       "sha256": "a2b67ba34ab257c3734b49940013c29b727d6b1cbb06d46bdb05476ef8647aff",
       "source_sha256": "a2b67ba34ab257c3734b49940013c29b727d6b1cbb06d46bdb05476ef8647aff",
       "byte_identical_to_source": true
+    },
+    {
+      "order": 7,
+      "label": "晴日林荫车道",
+      "source_attachment_filename": "codex-clipboard-77269d57-b24e-49b0-b59b-50eb956e295d.png",
+      "project_relative_path": "07_background_replacement/assets/backgrounds/07_sunlit_canopy_road.png",
+      "size": [
+        1024,
+        1365
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "size_bytes": 2695005,
+      "sha256": "912f83b59acdb156f9847f1776441f9c277fdc267c84c73f0291f7891d8ae1f7",
+      "source_sha256": "912f83b59acdb156f9847f1776441f9c277fdc267c84c73f0291f7891d8ae1f7",
+      "byte_identical_to_source": true
+    },
+    {
+      "order": 8,
+      "label": "红砖楼旁道路",
+      "source_attachment_filename": "codex-clipboard-fa69c67b-a40b-40d2-9216-9937084b9d26.png",
+      "project_relative_path": "07_background_replacement/assets/backgrounds/08_red_brick_drive.png",
+      "size": [
+        1024,
+        767
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "size_bytes": 920301,
+      "sha256": "0863879f683ec0eb0a252769cddcd1d0293f151b042900aa82505a446abed5a1",
+      "source_sha256": "0863879f683ec0eb0a252769cddcd1d0293f151b042900aa82505a446abed5a1",
+      "byte_identical_to_source": true
+    },
+    {
+      "order": 9,
+      "label": "雪后铺装路面",
+      "source_attachment_filename": "codex-clipboard-3d014925-33eb-45bf-acb9-88b206d27b4f.png",
+      "project_relative_path": "07_background_replacement/assets/backgrounds/09_snowy_paving.png",
+      "size": [
+        1024,
+        682
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "size_bytes": 861761,
+      "sha256": "86c5e2d30a10af9ed751d83b9c99b48e2c06c1ac4b5e922c3da522a4fb36f5af",
+      "source_sha256": "86c5e2d30a10af9ed751d83b9c99b48e2c06c1ac4b5e922c3da522a4fb36f5af",
+      "byte_identical_to_source": true
     }
   ]
 }

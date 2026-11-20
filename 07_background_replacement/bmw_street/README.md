@@ -5,6 +5,9 @@
 | 商铺街，1080 × 811 | [背景](../assets/backgrounds/04_neighborhood_shopping_street.png) | [前景近景成图](../../docs/assets/bmw5/shopping-glb.png) | [第 04 帧](../../bmw_img/bmw-2026-525li-carbon-black-360/04.webp) · [成图](../../docs/assets/bmw5/shopping-frame.png) |
 | 居民街，800 × 533 | [背景](../assets/backgrounds/05_residential_street.png) | [成图](../../docs/assets/bmw5/residential-glb.png) | [第 06 帧](../../bmw_img/bmw-2026-525li-carbon-black-360/06.webp) · [成图](../../docs/assets/bmw5/residential-frame.png) |
 | 麓山南路，1024 × 1365 | [背景](../assets/backgrounds/06_tree_lined_avenue.png) | [成图](../../docs/assets/bmw5/lushan-south-road-glb.png) | [第 02 帧](../../bmw_img/bmw-2026-525li-carbon-black-360/02.webp) · [成图](../../docs/assets/bmw5/lushan-south-road-frame.png) |
+| 晴日林荫车道，1024 × 1365 | [背景](../assets/backgrounds/07_sunlit_canopy_road.png) | [成图](../../docs/assets/bmw5/sunlit-canopy-glb.png) | [第 24 帧](../../bmw_img/bmw-2026-525li-carbon-black-360/24.webp) · [成图](../../docs/assets/bmw5/sunlit-canopy-frame.png) |
+| 红砖楼旁道路，1024 × 767 | [背景](../assets/backgrounds/08_red_brick_drive.png) | [成图](../../docs/assets/bmw5/red-brick-drive-glb.png) | [第 02 帧](../../bmw_img/bmw-2026-525li-carbon-black-360/02.webp) · [成图](../../docs/assets/bmw5/red-brick-drive-frame.png) |
+| 雪后铺装路面，1024 × 682 | [背景](../assets/backgrounds/09_snowy_paving.png) | [成图](../../docs/assets/bmw5/snowy-paving-glb.png) | [第 09 帧](../../bmw_img/bmw-2026-525li-carbon-black-360/09.webp) · [成图](../../docs/assets/bmw5/snowy-paving-frame.png) |
 
 GLB 使用八张棚拍照片制作的[已修复宝马 5 系](../../08_3d_probe/bmw5/README.md)。另一列取自独立的 2026 款 525Li 碳黑色环绕素材，共 36 个 WebP，解码后有 20 个不同画面。两列均按路面透视放车，建立接地阴影，再用本地 Qwen-Image-2.1 做双参考光照融合。车牌、车标等局部细节用输入保护，车与阴影以外使用原街景。两种车辆素材在窗户、轮毂和原始照明上都有差异，这组图用于比较实际观感。
 

@@ -4,27 +4,6 @@
 
 目前实现了程序化物理天气基线、本地 Qwen-Image-2.1 原图条件编辑、光照／光学退化增强、成像质量、构图与尺度增强，以及通用 RGBA 前景合成；宝马 5 系另提供可旋转的照片贴图模型与真实街景融合示例。局部遮挡提供本地 Qwen 双参考融合，已有奥迪 A6L 和小米 YU7 的素材遮挡样例。项目处于方法探索与样图验证阶段，**尚未完成分类训练或证明增强带来的识别收益**。
 
-## 宝马 5 系 · 多视图建模与街景融合
-
-用四张棚拍照片生成车体几何，用同一辆车的八张照片贴图。从这一份 GLB 改变相机角度即可导图。下面的前侧、侧面和后侧都来自当前发布模型。
-
-![同一份宝马 5 系模型的前侧、侧面和后侧渲染](docs/assets/bmw5/three-views.jpg)
-
-[下载当前模型 GLB（8.2 MiB）](08_3d_probe/bmw5/bmw5.glb) · [导出任意方位与版本说明](08_3d_probe/bmw5/README.md)
-
-**局部修复。** 接缝修复 v3 是后续调整的基线。前脸优先取回照片可见的格栅、灯组和展示牌，玻璃改为较浅、遮住内饰的日光外观，车顶与后备厢盖在原图覆盖不足或贴图破碎处做局部修整。下图每行用相同机位比较该部位修复前后。
-
-![机盖与翼子板、挡风玻璃、车顶和后备厢盖的修复对比](docs/assets/bmw5/repairs.jpg)
-
-**放入真实街景。** 中列用上方 GLB 选角度渲染，右列直接使用另一组宝马 525Li 环绕原图中的一帧。两种方法均用本地 Qwen 匹配街道光照并处理接地阴影。点击图片可查看原尺寸。
-
-| 地点 | 原始街景 | 3D 模型选角度 | 525Li 环绕原图选帧 |
-| --- | --- | --- | --- |
-| 商铺街 | [![商铺街背景](07_background_replacement/assets/backgrounds/04_neighborhood_shopping_street.png)](07_background_replacement/assets/backgrounds/04_neighborhood_shopping_street.png) | [![商铺街模型融合](docs/assets/bmw5/shopping-glb.png)](docs/assets/bmw5/shopping-glb.png) | [![商铺街第 04 帧融合](docs/assets/bmw5/shopping-frame.png)](docs/assets/bmw5/shopping-frame.png) |
-| 居民街 | [![居民街背景](07_background_replacement/assets/backgrounds/05_residential_street.png)](07_background_replacement/assets/backgrounds/05_residential_street.png) | [![居民街模型融合](docs/assets/bmw5/residential-glb.png)](docs/assets/bmw5/residential-glb.png) | [![居民街第 06 帧融合](docs/assets/bmw5/residential-frame.png)](docs/assets/bmw5/residential-frame.png) |
-
-[街景原图、选帧与融合复跑](07_background_replacement/bmw_street/README.md) · [反光处理实验](09_reflection_cleanup/README.md)
-
 ## 方法与当前进展
 
 | 方法 | 实现方式 | 已完成的实验 | 主要限制 |
@@ -209,6 +188,19 @@ Qwen 当前未接入 ControlNet，场景配置中的部件区域用于裁剪对�
 [整图大图](docs/assets/qwen-yu7-occlusion-overview.jpg) · [车头放大图](docs/assets/qwen-yu7-occlusion-detail.jpg) · [布局、配置与复跑方法](docs/06_local_occlusion.md#yu7-occlusion)。两张单图保留生成 PNG，对比页使用 JPEG；以上图片均随仓库保存，可在 GitHub 直接浏览。
 
 布局参考与提示词用于引导位置、比例和模糊，不能精确锁定生成结果。Qwen 仍会重绘未遮挡的灯内纹理、轮毂／轮胎细节和车牌小字；这些展示图未使用原车像素贴回，没有精确生成遮挡 mask。单张推理约 41 秒，峰值已分配显存约 48.3 GiB。
+
+### 宝马 5 系的 3D 模型与街景融合
+
+下图从同一个宝马 5 系模型渲染，依次为前侧、侧面和后侧。[下载模型（GLB，8.2 MiB）](08_3d_probe/bmw5/bmw5.glb)
+
+![宝马 5 系最终模型的前侧、侧面和后侧](docs/assets/bmw5/three-views.jpg)
+
+商铺街和居民街各展示两张融合成图。第一张使用 3D 模型选取视角，第二张使用宝马 525Li 环绕图中的一帧。
+
+| 街景 | 3D 模型渲染后融合 | 525Li 环绕图选帧后融合 |
+| --- | --- | --- |
+| 商铺街 | [![商铺街模型融合成图](docs/assets/bmw5/shopping-glb.png)](docs/assets/bmw5/shopping-glb.png) | [![商铺街第 04 帧融合成图](docs/assets/bmw5/shopping-frame.png)](docs/assets/bmw5/shopping-frame.png) |
+| 居民街 | [![居民街模型融合成图](docs/assets/bmw5/residential-glb.png)](docs/assets/bmw5/residential-glb.png) | [![居民街第 06 帧融合成图](docs/assets/bmw5/residential-frame.png)](docs/assets/bmw5/residential-frame.png) |
 
 ## 目录结构
 
@@ -570,7 +562,6 @@ python 02_qwen_image_edit/summarize_batch.py \
 
 | 文档 | 内容 |
 | --- | --- |
-| [宝马 5 系模型与修复](08_3d_probe/bmw5/README.md) · [宝马街景融合](07_background_replacement/bmw_street/README.md) | GLB、新视角导出、反光修复与同场景对照 |
 | [文档索引](docs/README.md) | 全部说明与目录约定 |
 | [物理方法](docs/01_physics_based.md) · [实验结果](docs/01_physics_results.md) | 成像模型、参数、保真边界与三轮记录 |
 | [Qwen 编辑方法](docs/02_qwen_image_edit.md) | 单图与批次结果、资源消耗、视觉检查 |
@@ -578,6 +569,7 @@ python 02_qwen_image_edit/summarize_batch.py \
 | [成像质量增强](docs/04_imaging_quality.md) | 失焦、运动模糊、噪声、低分辨率、JPEG 压缩与无损对比 |
 | [构图与尺度增强](docs/05_composition_scale.md) | 明显缩放、偏置取景和倾斜，坐标同步映射及部件可见性 |
 | [局部遮挡增强](docs/06_local_occlusion.md) | CPU 枝叶合成与遮挡率；本地 Qwen 骑行者双参考融合 |
+| [宝马 5 系模型与修复](08_3d_probe/bmw5/README.md) · [宝马街景融合](07_background_replacement/bmw_street/README.md) | GLB、新视角导出、反光修复与同场景对照 |
 | [生成模型方案](docs/generative_weather_plan.md) | 候选路线与实验验收流程 |
 | [SDXL 备选路线](docs/03_sdxl_controlnet_ipadapter.md) | 暂缓实施的结构与参考条件方案 |
 | [论文研究方案](docs/research_proposal.md) | 判别部件保真候选、评测协议与最小验证计划 |

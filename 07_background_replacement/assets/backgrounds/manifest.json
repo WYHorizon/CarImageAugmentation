@@ -1,5 +1,6 @@
 {
   "saved_date": "2026-11-13",
+  "updated_date": "2026-11-20",
   "source": "User-provided image attachments, in the order received.",
   "purpose": "Background reference images for local Qwen prompt-based vehicle background replacement.",
   "preservation": "Original attachment bytes copied without resizing, cropping, colour conversion or re-encoding.",
@@ -54,6 +55,32 @@
       "size_bytes": 2856203,
       "sha256": "7f7fb54f8d27950b98bdb2b0830ca28359f13313f0476e0221b721fe3e646254",
       "source_sha256": "7f7fb54f8d27950b98bdb2b0830ca28359f13313f0476e0221b721fe3e646254",
+      "byte_identical_to_source": true
+    },
+    {
+      "order": 4,
+      "label": "街区商铺道路",
+      "source_attachment_filename": "codex-clipboard-83471970-280a-406d-b3b9-153243b7e81d.png",
+      "project_relative_path": "07_background_replacement/assets/backgrounds/04_neighborhood_shopping_street.png",
+      "size": [1080, 811],
+      "mode": "RGB",
+      "format": "PNG",
+      "size_bytes": 1256429,
+      "sha256": "26185d264b969c4d2e9ded9a268bdb56506c42524c4db3803e00a0b536806945",
+      "source_sha256": "26185d264b969c4d2e9ded9a268bdb56506c42524c4db3803e00a0b536806945",
+      "byte_identical_to_source": true
+    },
+    {
+      "order": 5,
+      "label": "住宅街巷",
+      "source_attachment_filename": "codex-clipboard-1e699484-044c-4713-b448-71258a83e5ac.png",
+      "project_relative_path": "07_background_replacement/assets/backgrounds/05_residential_street.png",
+      "size": [800, 533],
+      "mode": "RGB",
+      "format": "PNG",
+      "size_bytes": 672779,
+      "sha256": "021dc04d7f7fcfed7e761858fbae56a3b43bc012371327f7fe704e28ae1d2af7",
+      "source_sha256": "021dc04d7f7fcfed7e761858fbae56a3b43bc012371327f7fe704e28ae1d2af7",
       "byte_identical_to_source": true
     }
   ]

@@ -1,0 +1,373 @@
+<div id="bmw5-material-preview">
+  <style>
+    #bmw5-material-preview { display: grid; gap: calc(var(--font-size-base) * 1); min-width: 0; }
+    #bmw5-material-preview .preview-title { padding-inline-end: 90px; min-height: 50px; display: flex; align-items: center; }
+    #bmw5-material-preview .material-stage { width: 100%; height: clamp(260px, 54vw, 420px); min-width: 0; touch-action: none; }
+    #bmw5-material-preview .material-stage canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+    #bmw5-material-preview .material-stage canvas.dragging { cursor: grabbing; }
+    #bmw5-material-preview .control-caption { display: flex; justify-content: space-between; gap: calc(var(--font-size-base) * .5); }
+    #bmw5-material-preview .capture-image { display: block; width: 100%; height: auto; }
+    #bmw5-material-preview .capture { display: grid; gap: calc(var(--font-size-base) * .5); min-width: 0; }
+    #bmw5-material-preview [hidden] { display: none; }
+  </style>
+  <div class="preview-title"><h3>宝马5系 · 材质与反光</h3></div>
+  <div class="viz-controls">
+    <label class="form-label" for="bmw6-mode">材质
+      <select class="form-select" id="bmw6-mode">
+        <option value="pbr">新分区材质</option><option value="photo">旧照片贴图</option>
+      </select>
+    </label>
+    <label class="form-label" for="bmw6-environment">棚拍环境
+      <select class="form-select" id="bmw6-environment">
+        <option value="softbox">大柔光箱</option><option value="strip">条形灯</option>
+      </select>
+    </label>
+  </div>
+  <div class="material-stage cursor-interaction" role="img" aria-label="可拖拽旋转和滚轮缩放的宝马5系模型；下方也可设置观察角度。"></div>
+  <div class="viz-controls">
+    <label class="form-label" for="bmw6-yaw">
+      <span class="control-caption"><span>环绕角</span><output class="tabular-nums" id="bmw6-yaw-value" for="bmw6-yaw">30°</output></span>
+      <input class="form-range" id="bmw6-yaw" type="range" min="0" max="359" step="1" value="30">
+    </label>
+    <label class="form-label" for="bmw6-elevation">
+      <span class="control-caption"><span>俯仰角</span><output class="tabular-nums" id="bmw6-elevation-value" for="bmw6-elevation">8°</output></span>
+      <input class="form-range" id="bmw6-elevation" type="range" min="0" max="65" step="1" value="8">
+    </label>
+  </div>
+  <label class="form-label" for="bmw6-environment-yaw">
+    <span class="control-caption"><span>环境方向</span><output class="tabular-nums" id="bmw6-environment-yaw-value" for="bmw6-environment-yaw">0°</output></span>
+    <input class="form-range" id="bmw6-environment-yaw" type="range" min="0" max="359" step="1" value="0">
+  </label>
+  <div class="viz-row">
+    <button class="btn btn-primary" type="button" id="bmw6-capture" disabled>导出当前角度 PNG</button>
+    <span class="text-small text-muted" id="bmw6-status" aria-live="polite">正在准备模型</span>
+  </div>
+  <div class="capture" hidden>
+    <div class="viz-row">
+      <span class="text-small tabular-nums" id="bmw6-capture-label"></span>
+      <a class="btn" id="bmw6-download" download="bmw5-material-preview.png">下载 PNG</a>
+    </div>
+    <img class="capture-image" alt="当前相机角度和棚拍环境下导出的宝马5系模型图片">
+  </div>
+  <script id="bmw6-mesh-data" type="application/json">__MATERIAL_DATA_JSON__</script>
+  <script>__MATERIAL_THREE_BUNDLE__</script>
+  <script>
+  (() => {
+    'use strict';
+    const root = document.getElementById('bmw5-material-preview');
+    const query = selector => root.querySelector(selector);
+    const stage = query('.material-stage');
+    const status = query('#bmw6-status');
+    const captureButton = query('#bmw6-capture');
+    const controls = {
+      mode: query('#bmw6-mode'), environment: query('#bmw6-environment'),
+      yaw: query('#bmw6-yaw'), elevation: query('#bmw6-elevation'),
+      environmentYaw: query('#bmw6-environment-yaw')
+    };
+    const T = window.MATERIAL_THREE;
+    const degrees = Math.PI / 180;
+    const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
+    const wrap = x => ((x % 360) + 360) % 360;
+    const state = { mode: 'pbr', yaw: 30, elevation: 8, zoom: 1, environment: 'softbox', environmentYaw: 0 };
+    const environments = new Map();
+    let scene, renderer, camera, model, photoMesh, pbrMesh, detailMesh;
+    let groundMaterial, radius = 1, bounds, pmrem, resizeObserver, themeObserver;
+    let ready = false, destroyed = false, wheelTimer;
+    function normalizeState(value) {
+      if (!value || typeof value !== 'object') return;
+      if (value.mode === 'pbr' || value.mode === 'photo') state.mode = value.mode;
+      if (value.environment === 'softbox' || value.environment === 'strip') state.environment = value.environment;
+      if (Number.isFinite(value.yaw)) state.yaw = wrap(value.yaw);
+      if (Number.isFinite(value.elevation)) state.elevation = clamp(value.elevation, 0, 65);
+      if (Number.isFinite(value.environmentYaw)) state.environmentYaw = wrap(value.environmentYaw);
+      if (Number.isFinite(value.zoom)) state.zoom = clamp(value.zoom, .55, 2.4);
+    }
+    function restoreState(snapshot) {
+      normalizeState(snapshot && snapshot.privateContent && snapshot.privateContent.bmw5_material_v6);
+    }
+    function saveState() {
+      if (window.openai && window.openai.setWidgetState) {
+        const pending = window.openai.setWidgetState({
+          modelContent: { preview: 'bmw5_material_v6', mode: state.mode, azimuth: Math.round(state.yaw), elevation: Math.round(state.elevation), environment: state.environment, environmentYaw: Math.round(state.environmentYaw) },
+          privateContent: { bmw5_material_v6: { ...state } }
+        });
+        if (pending && pending.catch) pending.catch(() => {});
+      }
+    }
+    function syncControls() {
+      controls.mode.value = state.mode;
+      controls.environment.value = state.environment;
+      for (const key of ['yaw', 'elevation', 'environmentYaw']) {
+        controls[key].value = String(Math.round(state[key]) % 360);
+        query('#' + controls[key].id + '-value').textContent = Math.round(state[key]) % 360 + '°';
+      }
+    }
+    function tokenColor(token) {
+      const swatch = document.createElement('span');
+      swatch.style.color = 'var(' + token + ')'; root.appendChild(swatch);
+      const css = getComputedStyle(swatch).color; swatch.remove();
+      const canvas = document.createElement('canvas'); canvas.width = canvas.height = 1;
+      const ctx = canvas.getContext('2d'); ctx.fillStyle = css; ctx.fillRect(0, 0, 1, 1);
+      const p = ctx.getImageData(0, 0, 1, 1).data;
+      return new T.Color().setRGB(p[0] / 255, p[1] / 255, p[2] / 255, T.SRGBColorSpace);
+    }
+    function updateTheme() {
+      if (!renderer || destroyed) return;
+      const bg = tokenColor('--background');
+      groundMaterial.color.copy(bg).lerp(tokenColor('--foreground'), .06);
+      renderer.setClearColor(bg, 0);
+      render();
+    }
+    function render() {
+      syncControls();
+      if (!ready || destroyed) return;
+      photoMesh.visible = state.mode === 'photo';
+      pbrMesh.visible = detailMesh.visible = state.mode === 'pbr';
+      scene.environment = environments.get(state.environment).texture;
+      // r160 lacks environmentRotation. Rotate model and camera together so the
+      // view in model coordinates stays fixed while the environment turns.
+      const environmentAngle = state.mode === 'photo' ? 0 : -state.environmentYaw * degrees;
+      model.rotation.y = environmentAngle;
+      const cameraYaw = state.yaw * degrees + environmentAngle;
+      const halfVertical = camera.fov * degrees / 2;
+      const halfHorizontal = Math.atan(Math.tan(halfVertical) * camera.aspect);
+      const elevation = state.elevation * degrees;
+      const relativeYaw = state.yaw * degrees;
+      const right = new T.Vector3(Math.cos(relativeYaw), 0, -Math.sin(relativeYaw));
+      const up = new T.Vector3(-Math.sin(relativeYaw) * Math.sin(elevation), Math.cos(elevation), -Math.cos(relativeYaw) * Math.sin(elevation));
+      const view = new T.Vector3(Math.sin(relativeYaw) * Math.cos(elevation), Math.sin(elevation), Math.cos(relativeYaw) * Math.cos(elevation));
+      let fit = 0;
+      for (const corner of bounds) fit = Math.max(fit, corner.dot(view) + Math.max(Math.abs(corner.dot(right)) / Math.tan(halfHorizontal), Math.abs(corner.dot(up)) / Math.tan(halfVertical)));
+      const distance = fit * 1.12 * state.zoom;
+      camera.position.set(distance * Math.sin(cameraYaw) * Math.cos(elevation), distance * Math.sin(elevation), distance * Math.cos(cameraYaw) * Math.cos(elevation));
+      camera.lookAt(0, 0, 0);
+      renderer.render(scene, camera);
+    }
+    async function unpack(encoded, Type) {
+      const packed = Uint8Array.from(atob(encoded), c => c.charCodeAt(0));
+      const buffer = await new Response(new Blob([packed]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+      return new Type(buffer);
+    }
+    async function loadImage(url) {
+      if (typeof url !== 'string' || !url.startsWith('data:image/')) throw new Error('图像资源必须内嵌');
+      const image = new Image();
+      await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = () => reject(new Error('材质图像加载失败')); image.src = url; });
+      return image;
+    }
+    function newTexture(image, colorSpace) {
+      const texture = new T.Texture(image);
+      texture.colorSpace = colorSpace;
+      texture.minFilter = T.LinearMipmapLinearFilter; texture.magFilter = T.LinearFilter;
+      texture.needsUpdate = true;
+      return texture;
+    }
+    function imageCanvas(image, size, smooth) {
+      const canvas = document.createElement('canvas'); canvas.width = canvas.height = size;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      ctx.imageSmoothingEnabled = smooth;
+      if (smooth) ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(image, 0, 0, size, size);
+      return { canvas, ctx, pixels: ctx.getImageData(0, 0, size, size) };
+    }
+    function deriveMaterials(oldImage, idsImage, config) {
+      const size = Math.round(clamp(config.textureSize || 1024, 64, 2048));
+      const old = imageCanvas(oldImage, size, true);
+      const ids = imageCanvas(idsImage, size, false).pixels.data;
+      const pbr = imageCanvas(oldImage, size, true);
+      const detail = imageCanvas(oldImage, size, true);
+      const controlsCanvas = document.createElement('canvas'); controlsCanvas.width = controlsCanvas.height = size;
+      const ctx = controlsCanvas.getContext('2d');
+      const values = ctx.createImageData(size, size);
+      const rules = config.labels || {};
+      const counts = {};
+      for (let i = 0; i < ids.length; i += 4) {
+        const id = ids[i]; const rule = rules[String(id)];
+        const isPbr = !!(rule && rule.pbr);
+        counts[id] = (counts[id] || 0) + 1;
+        pbr.pixels.data[i + 3] = isPbr ? 255 : 0;
+        detail.pixels.data[i + 3] = isPbr ? 0 : 255;
+        if (isPbr) {
+          if (!Array.isArray(rule.color) || rule.color.length !== 3) throw new Error('PBR 材质缺少 RGB 颜色');
+          for (let channel = 0; channel < 3; channel++) pbr.pixels.data[i + channel] = clamp(Math.round(rule.color[channel]), 0, 255);
+        } else for (let channel = 0; channel < 3; channel++) pbr.pixels.data[i + channel] = 0;
+        values.data[i] = Math.round(255 * clamp(isPbr ? rule.clearcoat ?? 0 : 0, 0, 1));
+        values.data[i + 1] = Math.round(255 * clamp(isPbr ? rule.roughness ?? .5 : 0, 0, 1));
+        values.data[i + 2] = Math.round(255 * clamp(isPbr ? rule.metalness ?? 0 : 0, 0, 1));
+        values.data[i + 3] = 255;
+      }
+      pbr.ctx.putImageData(pbr.pixels, 0, 0); detail.ctx.putImageData(detail.pixels, 0, 0); ctx.putImageData(values, 0, 0);
+      return { old: newTexture(old.canvas, T.SRGBColorSpace), pbr: newTexture(pbr.canvas, T.SRGBColorSpace), detail: newTexture(detail.canvas, T.SRGBColorSpace), controls: newTexture(controlsCanvas, T.NoColorSpace), counts, size };
+    }
+    function studioEnvironment(kind) {
+      // HDR radiance is part of the physical lighting, independent of UI theme.
+      const studio = new T.Scene();
+      const cube = new T.BoxGeometry(1, 1, 1);
+      const roomMaterial = new T.MeshBasicMaterial({ color: new T.Color().setScalar(.08), side: T.BackSide });
+      const room = new T.Mesh(cube, roomMaterial); room.scale.set(18, 12, 18); studio.add(room);
+      const materials = [roomMaterial];
+      function panel(position, scale, intensity) {
+        const material = new T.MeshBasicMaterial({ color: new T.Color().setScalar(intensity) });
+        const box = new T.Mesh(cube, material); box.position.set(...position); box.scale.set(...scale); studio.add(box); materials.push(material);
+      }
+      if (kind === 'strip') {
+        panel([-6, 2, 1], [.1, 5.5, .8], 14);
+        panel([5, 2, -3], [.1, 4, .55], 11);
+        panel([0, 5, 0], [.7, .1, 7], 10);
+        panel([1, 1, 7], [2, 3, .1], 2);
+      } else {
+        panel([-6, 2, 1], [.1, 4, 6], 5);
+        panel([6, 2, -2], [.1, 3, 4], 3.5);
+        panel([0, 5, 0], [4, .1, 6], 4);
+        panel([1, 1, 7], [3, 2, .1], 1.5);
+      }
+      const target = pmrem.fromScene(studio, .04, .1, 30);
+      cube.dispose(); materials.forEach(material => material.dispose());
+      return target;
+    }
+    function capture(options = {}) {
+      if (!ready || destroyed) throw new Error('模型尚未准备好');
+      const width = Math.round(clamp(options.width || 1200, 64, 4096));
+      const height = Math.round(clamp(options.height || 900, 64, 4096));
+      const originalSize = renderer.getSize(new T.Vector2());
+      const originalRatio = renderer.getPixelRatio(), originalAspect = camera.aspect;
+      let dataUrl;
+      try {
+        renderer.setPixelRatio(1); renderer.setSize(width, height, false);
+        camera.aspect = width / height; camera.updateProjectionMatrix();
+        renderer.setClearAlpha(1); render();
+        dataUrl = renderer.domElement.toDataURL('image/png');
+        if (options.show) {
+          query('.capture-image').src = dataUrl;
+          query('#bmw6-download').href = dataUrl;
+          query('#bmw6-download').download = 'bmw5-' + state.mode + '-az' + Math.round(state.yaw) + '-el' + Math.round(state.elevation) + '.png';
+          query('#bmw6-capture-label').textContent = width + ' × ' + height + ' · ' + Math.round(state.yaw) + '° / ' + Math.round(state.elevation) + '°';
+          query('.capture').hidden = false;
+          status.textContent = '当前角度图片已生成';
+        }
+      } finally {
+        renderer.setClearAlpha(0); renderer.setPixelRatio(originalRatio);
+        renderer.setSize(originalSize.x, originalSize.y, false);
+        camera.aspect = originalAspect; camera.updateProjectionMatrix(); render();
+      }
+      return dataUrl;
+    }
+    const api = {
+      setState(value, options = {}) { normalizeState(value); render(); if (options.persist) saveState(); return { ...state }; },
+      getState() { return { ...state }; }, capture,
+      get ready() { return ready; }, metrics: null,
+      dispose() {
+        destroyed = true; clearTimeout(wheelTimer); resizeObserver?.disconnect(); themeObserver?.disconnect();
+        environments.forEach(target => target.dispose()); pmrem?.dispose();
+        if (scene) {
+          const geometries = new Set(), materials = new Set(), textures = new Set();
+          scene.traverse(object => { if (object.geometry) geometries.add(object.geometry); if (object.material) materials.add(object.material); });
+          materials.forEach(material => { for (const value of Object.values(material)) if (value && value.isTexture) textures.add(value); material.dispose(); });
+          textures.forEach(texture => texture.dispose()); geometries.forEach(geometry => geometry.dispose());
+        }
+        renderer?.dispose();
+      }
+    };
+    window.__materialPreview = api;
+    (async () => {
+      try {
+        if (!T) throw new Error('渲染组件未加载，请重新打开预览');
+        const data = JSON.parse(query('#bmw6-mesh-data').textContent);
+        const [words, normals, oldImage, idsImage] = await Promise.all([
+          unpack(data.geometry, Uint16Array), data.normals ? unpack(data.normals, Int16Array) : null,
+          loadImage(data.oldTexture), loadImage(data.materialIds)
+        ]);
+        const expectedWords = data.vertexCount * 5 + data.faceCount * 3;
+        if (words.length !== expectedWords || data.vertexCount > 65535) throw new Error('网格数据长度不匹配');
+        const positions = new Float32Array(data.vertexCount * 3), uvs = new Float32Array(data.vertexCount * 2);
+        for (let i = 0; i < positions.length; i++) positions[i] = data.minimum[i % 3] + words[i] / 65535 * data.span[i % 3];
+        for (let i = 0; i < uvs.length; i++) uvs[i] = words[positions.length + i] / 65535;
+        const geometry = new T.BufferGeometry();
+        geometry.setAttribute('position', new T.Float32BufferAttribute(positions, 3));
+        geometry.setAttribute('uv', new T.Float32BufferAttribute(uvs, 2));
+        geometry.setIndex(Array.from(words.subarray(data.vertexCount * 5)));
+        if (normals) {
+          if (normals.length !== positions.length) throw new Error('法线数据长度不匹配');
+          geometry.setAttribute('normal', new T.Float32BufferAttribute(Float32Array.from(normals, value => value / 32767), 3));
+          geometry.normalizeNormals();
+        } else geometry.computeVertexNormals();
+        geometry.computeBoundingBox();
+        const center = geometry.boundingBox.getCenter(new T.Vector3()); geometry.translate(-center.x, -center.y, -center.z);
+        geometry.computeBoundingBox(); geometry.computeBoundingSphere(); radius = geometry.boundingSphere.radius;
+        bounds = [];
+        for (const x of [geometry.boundingBox.min.x, geometry.boundingBox.max.x])
+          for (const y of [geometry.boundingBox.min.y, geometry.boundingBox.max.y])
+            for (const z of [geometry.boundingBox.min.z, geometry.boundingBox.max.z]) bounds.push(new T.Vector3(x, y, z));
+        const config = data.materialConfig || {};
+        const textures = deriveMaterials(oldImage, idsImage, config);
+        const pbrMaterial = new T.MeshPhysicalMaterial({
+          map: textures.pbr, roughnessMap: textures.controls, metalnessMap: textures.controls, clearcoatMap: textures.controls,
+          roughness: 1, metalness: 1, clearcoat: 1, clearcoatRoughness: config.clearcoatRoughness ?? .22,
+          envMapIntensity: config.envMapIntensity ?? 1, alphaTest: .5, side: T.DoubleSide
+        });
+        const detailMaterial = new T.MeshBasicMaterial({ map: textures.detail, alphaTest: .5, side: T.DoubleSide, toneMapped: false });
+        const photoMaterial = new T.MeshBasicMaterial({ map: textures.old, side: T.DoubleSide, toneMapped: false });
+        scene = new T.Scene(); camera = new T.PerspectiveCamera(35, 1, .01, 100);
+        renderer = new T.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); renderer.outputColorSpace = T.SRGBColorSpace;
+        renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = config.exposure ?? 1;
+        stage.appendChild(renderer.domElement);
+        model = new T.Group(); scene.add(model);
+        photoMesh = new T.Mesh(geometry, photoMaterial); pbrMesh = new T.Mesh(geometry, pbrMaterial); detailMesh = new T.Mesh(geometry, detailMaterial);
+        // Complementary alpha masks share geometry and filtering. Detail draws
+        // last to resolve the exact 0.5 boundary consistently.
+        detailMesh.renderOrder = 1; model.add(photoMesh, pbrMesh, detailMesh);
+        groundMaterial = new T.MeshBasicMaterial({ side: T.DoubleSide, toneMapped: false });
+        const ground = new T.Mesh(new T.CircleGeometry(radius * 1000, 32), groundMaterial);
+        ground.rotation.x = -Math.PI / 2; ground.position.y = geometry.boundingBox.min.y - radius * .015; scene.add(ground);
+        pmrem = new T.PMREMGenerator(renderer);
+        environments.set('softbox', studioEnvironment('softbox')); environments.set('strip', studioEnvironment('strip'));
+        api.metrics = { vertexCount: data.vertexCount, faceCount: data.faceCount, materialSize: textures.size, materialCounts: textures.counts, suppliedNormals: !!normals };
+        restoreState(window.openai && window.openai.widgetState); ready = true;
+        const resize = () => {
+          if (destroyed) return;
+          const width = Math.max(1, stage.clientWidth), height = Math.max(1, stage.clientHeight);
+          renderer.setSize(width, height, false); camera.aspect = width / height; camera.updateProjectionMatrix(); render();
+        };
+        resizeObserver = new ResizeObserver(resize); resizeObserver.observe(stage); resize(); updateTheme();
+        const canvas = renderer.domElement; let pointerId = null, lastX = 0, lastY = 0;
+        canvas.addEventListener('pointerdown', event => {
+          if (event.button !== 0 || pointerId !== null) return;
+          pointerId = event.pointerId; lastX = event.clientX; lastY = event.clientY;
+          canvas.classList.add('dragging'); canvas.setPointerCapture(event.pointerId);
+        });
+        canvas.addEventListener('pointermove', event => {
+          if (event.pointerId !== pointerId) return;
+          state.yaw = wrap(state.yaw - (event.clientX - lastX) * .45);
+          state.elevation = clamp(state.elevation + (event.clientY - lastY) * .3, 0, 65);
+          lastX = event.clientX; lastY = event.clientY; render();
+        });
+        const finishDrag = event => { if (event.pointerId === pointerId) { pointerId = null; canvas.classList.remove('dragging'); saveState(); } };
+        for (const event of ['pointerup', 'pointercancel', 'lostpointercapture']) canvas.addEventListener(event, finishDrag);
+        canvas.addEventListener('wheel', event => {
+          event.preventDefault(); state.zoom = clamp(state.zoom * Math.exp(event.deltaY * .001), .55, 2.4); render();
+          clearTimeout(wheelTimer); wheelTimer = setTimeout(saveState, 200);
+        }, { passive: false });
+        for (const key of ['yaw', 'elevation', 'environmentYaw']) {
+          controls[key].addEventListener('input', () => { normalizeState({ [key]: Number(controls[key].value) }); render(); });
+          controls[key].addEventListener('change', saveState);
+        }
+        for (const key of ['mode', 'environment']) controls[key].addEventListener('change', () => {
+          normalizeState({ [key]: controls[key].value }); render(); saveState();
+          status.textContent = state.mode === 'photo' ? '旧照片贴图 · 反光随车身固定' : '新分区材质 · 转动环境观察反光';
+        });
+        captureButton.disabled = false;
+        captureButton.addEventListener('click', () => { try { capture({ show: true }); } catch (error) { status.textContent = '图片生成失败：' + error.message; } });
+        window.addEventListener('openai:set_globals', event => {
+          const globals = event.detail && event.detail.globals;
+          if (globals && globals.widgetState) { restoreState(globals.widgetState); render(); }
+          updateTheme();
+        });
+        themeObserver = new MutationObserver(updateTheme);
+        themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'style', 'data-theme'] });
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme);
+        status.textContent = '拖拽旋转 · 滚轮缩放';
+      } catch (error) { status.textContent = error.message; status.setAttribute('role', 'alert'); api.error = error.message; }
+    })();
+  })();
+  </script>
+</div>

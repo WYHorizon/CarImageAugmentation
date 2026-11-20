@@ -1,6 +1,6 @@
 # 汽车细粒度图像增强实验
 
-项目根目录是 `/nas/wyh/CarImageAugmentation`，用于比较汽车天气、光照、成像质量、构图及局部遮挡增强方法。项目说明统一放在 `docs/`；每种方法的代码、依赖、配置、测试和输出保留在自己的方法目录中。
+项目根目录是 `/nas/wyh/CarImageAugmentation`，用于比较汽车天气、光照、成像质量、构图、局部遮挡、背景替换及多视图 3D 增强方法。项目说明统一放在 `docs/`；每种方法的代码、依赖、配置、测试和输出保留在自己的方法目录中。
 
 ## 文档索引
 
@@ -15,6 +15,9 @@
 | [构图与尺度增强](05_composition_scale.md) | 清单方法 3：四车八预设共 32 张主图，233 PNG 核验与 27 项测试通过；车辆及部件标注同步映射 |
 | [局部遮挡增强](06_local_occlusion.md) | 清单方法 5：通用 RGBA 合成与本地 Qwen 双参考融合；奥迪样例、小米 YU7 树枝／骑行者两版，含整图、车头与部件对比、配置及复跑方法 |
 | [背景替换](07_background_replacement.md) | 清单方法 4：仅本地 Qwen 与提示词，三背景 × 四车共 12 张；GitHub 可浏览两列效果预览、四车原图对比及原尺寸成图，附车系特征检查 |
+| [宝马 5 系模型与修复](../08_3d_probe/bmw5/README.md) | 四图建模、八图贴图、接缝与部件修复、GLB 下载和新视角导出 |
+| [宝马街景融合](../07_background_replacement/bmw_street/README.md) | 两种前景来源、两张背景与商铺街复跑 |
+| [反光清理实验](../09_reflection_cleanup/README.md) | Qwen 局部修复、二维保护和固定网格纹理替换 |
 | [SDXL 结构与参考条件对照](03_sdxl_controlnet_ipadapter.md) | 暂缓的备选路线；仅完成方案及接口核查，尚未部署权重 |
 | [生成模型方案](generative_weather_plan.md) | Qwen、SDXL 等模型选择、结构控制与实验验收流程 |
 | [论文选题与最小验证方案](research_proposal.md) | 相关工作重复风险、判别部件保真天气增强候选、真实分类评测与逐步验证；尚未实现新算法 |
@@ -85,6 +88,8 @@ CarImageAugmentation/
 │   ├── run.py
 │   ├── run_qwen.py
 │   └── requirements.txt
+├── 08_3d_probe/              # 多视图建模与发布的宝马 GLB
+├── 09_reflection_cleanup/    # 漆面与玻璃反光实验
 └── 07_background_replacement/ # 清单方法 4：Qwen 背景替换
     ├── assets/backgrounds/
     ├── configs/

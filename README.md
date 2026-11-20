@@ -1,8 +1,29 @@
 # CarImageAugmentation
 
-面向**细粒度车型识别**的汽车天气、光照、成像质量、构图、局部遮挡及背景替换增强实验项目。目标是从车辆原图生成天气、曝光、对比度、冷暖、强光学退化，以及模糊、噪声、低分辨率、压缩、构图尺度和前景遮挡变化，同时检查车灯、格栅、车标、轮毂、车身折线和基本漆色的保留情况，为后续分类训练与鲁棒性评测提供候选数据。背景替换使用车辆原图与环境参考进行本地 Qwen 双参考编辑。
+面向**细粒度车型识别**的汽车天气、光照、成像质量、构图、局部遮挡、背景替换及多视图 3D 增强实验项目。目标是从车辆原图生成天气、曝光、对比度、冷暖、强光学退化，以及模糊、噪声、低分辨率、压缩、构图尺度和前景遮挡变化，同时检查车灯、格栅、车标、轮毂、车身折线和基本漆色的保留情况，为后续分类训练与鲁棒性评测提供候选数据。背景替换使用车辆原图与环境参考进行本地 Qwen 双参考编辑。
 
-目前实现了程序化物理天气基线、本地 Qwen-Image-2.1 原图条件编辑、光照／光学退化增强、成像质量、构图与尺度增强，以及通用 RGBA 前景合成；局部遮挡另提供本地 Qwen 双参考融合，已有奥迪 A6L 和小米 YU7 的素材遮挡样例。项目处于方法探索与样图验证阶段，**尚未完成分类训练或证明增强带来的识别收益**。
+目前实现了程序化物理天气基线、本地 Qwen-Image-2.1 原图条件编辑、光照／光学退化增强、成像质量、构图与尺度增强，以及通用 RGBA 前景合成；宝马 5 系另提供可旋转的照片贴图模型与真实街景融合示例。局部遮挡提供本地 Qwen 双参考融合，已有奥迪 A6L 和小米 YU7 的素材遮挡样例。项目处于方法探索与样图验证阶段，**尚未完成分类训练或证明增强带来的识别收益**。
+
+## 宝马 5 系 · 多视图建模与街景融合
+
+用四张棚拍照片生成车体几何，用同一辆车的八张照片贴图。从这一份 GLB 改变相机角度即可导图。下面的前侧、侧面和后侧都来自当前发布模型。
+
+![同一份宝马 5 系模型的前侧、侧面和后侧渲染](docs/assets/bmw5/three-views.jpg)
+
+[下载当前模型 GLB（8.2 MiB）](08_3d_probe/bmw5/bmw5.glb) · [导出任意方位与版本说明](08_3d_probe/bmw5/README.md)
+
+**局部修复。** 接缝修复 v3 是后续调整的基线。前脸优先取回照片可见的格栅、灯组和展示牌，玻璃改为较浅、遮住内饰的日光外观，车顶与后备厢盖在原图覆盖不足或贴图破碎处做局部修整。下图每行用相同机位比较该部位修复前后。
+
+![机盖与翼子板、挡风玻璃、车顶和后备厢盖的修复对比](docs/assets/bmw5/repairs.jpg)
+
+**放入真实街景。** 中列用上方 GLB 选角度渲染，右列直接使用另一组宝马 525Li 环绕原图中的一帧。两种方法均用本地 Qwen 匹配街道光照并处理接地阴影。点击图片可查看原尺寸。
+
+| 地点 | 原始街景 | 3D 模型选角度 | 525Li 环绕原图选帧 |
+| --- | --- | --- | --- |
+| 商铺街 | [![商铺街背景](07_background_replacement/assets/backgrounds/04_neighborhood_shopping_street.png)](07_background_replacement/assets/backgrounds/04_neighborhood_shopping_street.png) | [![商铺街模型融合](docs/assets/bmw5/shopping-glb.png)](docs/assets/bmw5/shopping-glb.png) | [![商铺街第 04 帧融合](docs/assets/bmw5/shopping-frame.png)](docs/assets/bmw5/shopping-frame.png) |
+| 居民街 | [![居民街背景](07_background_replacement/assets/backgrounds/05_residential_street.png)](07_background_replacement/assets/backgrounds/05_residential_street.png) | [![居民街模型融合](docs/assets/bmw5/residential-glb.png)](docs/assets/bmw5/residential-glb.png) | [![居民街第 06 帧融合](docs/assets/bmw5/residential-frame.png)](docs/assets/bmw5/residential-frame.png) |
+
+[街景原图、选帧与融合复跑](07_background_replacement/bmw_street/README.md) · [反光处理实验](09_reflection_cleanup/README.md)
 
 ## 方法与当前进展
 
@@ -15,8 +36,9 @@
 | 构图与尺度增强（清单方法 3） | NumPy/Pillow；等比放大、偏置裁剪、±12° 画面倾斜，标注同步映射 | 八种预设，四车 32 张候选图；整图、取景框及对应部件对比 | 紧裁剪允许截断，二维取景不产生真实新视角 |
 | 局部遮挡增强（清单方法 5） | CPU 通用 RGBA 合成；独立本地 Qwen 双参考融合 | 奥迪枝叶合成与骑行者融合；小米 YU7 树枝、骑行者两版 Qwen 遮挡，含整图及车头放大对比 | CPU 固定配置摆放；Qwen 可能重绘部件，无精确遮挡 mask |
 | [背景替换（清单方法 4）](docs/07_background_replacement.md) | 本地 Qwen 双参考；仅提示词引导 | 海边、秋林、城市三背景 × 四车共 12 张；提供两列分组预览及原图对比 | 允许整体缩放、位置变化；需保留车系判别特征，尚未进行分类评测 |
+| [宝马多视图建模](08_3d_probe/bmw5/README.md) | Hunyuan3D-2mv 几何、八图照片贴图与分部位修复 | 可旋转 GLB、连续选角度、两组街景对照 | 高机位和未观测表面缺少真实参考，车型保真与训练收益尚待验证 |
 
-共享样图为奥迪 A6L、宝马 4 系、小米 YU7、本田 CR-V，原图均为 3840×2880。现有 Qwen 样图尚未被判定通过严格细粒度保真验收；文件校验通过不代表车型保真或训练有效性通过。
+早期二维方法的共享样图为奥迪 A6L、宝马 4 系、小米 YU7、本田 CR-V，原图均为 3840×2880。现有 Qwen 样图尚未被判定通过严格细粒度保真验收；文件校验通过不代表车型保真或训练有效性通过。
 
 Qwen 当前未接入 ControlNet，场景配置中的部件区域用于裁剪对照，不作为生成时的结构约束。SDXL + ControlNet + IP-Adapter 暂缓部署，判别部件保真控制仍是待验证的研究方案。
 
@@ -257,15 +279,18 @@ CarImageAugmentation/
 │   ├── run_qwen.py                  # 本地 Qwen 双参考融合与部件对比
 │   ├── requirements.txt
 │   └── outputs/                     # 主图、遮挡 mask、裁剪与运行清单
-└── 07_background_replacement/        # 清单方法 4：Qwen 提示词背景替换
-    ├── assets/backgrounds/          # 三张用户背景原图及来源记录
-    ├── configs/                     # 车辆、背景与推理参数
-    ├── prompts/                     # 用户原提示词与构图约束版本
-    ├── run.py                       # 双参考离线推理与部件对比
-    ├── run_batch.py                 # 按配置串行生成背景与车辆组合
-    ├── build_report.py              # 两列分组图与本地原尺寸图库
-    ├── requirements.txt
-    └── outputs/                     # 生成结果、输入快照、对比与运行清单
+├── 07_background_replacement/        # 清单方法 4：Qwen 提示词背景替换
+│   ├── assets/backgrounds/          # 五张用户背景原图及来源记录
+│   ├── configs/                     # 车辆、背景与推理参数
+│   ├── prompts/                     # 用户原提示词与构图约束版本
+│   ├── run.py                       # 双参考离线推理与部件对比
+│   ├── run_batch.py                 # 按配置串行生成背景与车辆组合
+│   ├── build_report.py              # 两列分组图与本地原尺寸图库
+│   ├── requirements.txt
+│   └── outputs/                     # 生成结果、输入快照、对比与运行清单
+├── 08_3d_probe/                      # 多视图建模、照片贴图与 bmw5/ 当前模型
+├── 09_reflection_cleanup/            # Qwen 漆面与玻璃局部反光实验
+└── bmw_img/                          # 525Li 环绕原始帧
 ```
 
 仓库包含代码、配置、文档、测试原图及 `docs/assets/` 中的精选预览图。`models/`、各方法的 `outputs/`、Python 缓存与虚拟环境由 `.gitignore` 排除，克隆后需另行准备权重并生成完整结果。README 中的精选预览可直接浏览；详细文档中指向历史 `outputs/` 的图片链接仍需对应本地输出。
@@ -539,12 +564,13 @@ python 02_qwen_image_edit/summarize_batch.py \
 - 新增 Qwen 输入也需在场景配置中添加同名条目，用于整车和部件对照。当前提示词中的“保持细节”是软约束，需逐图检查生成结果。
 - `complete_pending_visual_review` 表示生成与记录完成，仍需检查车型特征、天气效果及背景布局变化。
 - 训练、验证、测试应按原始照片及拍摄组划分，同一原图的所有增强版本留在同一集合，避免数据泄漏。
-- 四张展示原图只用于方法验证。下游收益需要独立真实天气测试集及分类训练实验支持。
+- 早期四张展示原图及新增宝马素材用于方法验证。下游收益需要独立真实天气测试集及分类训练实验支持。
 
 ## 详细文档
 
 | 文档 | 内容 |
 | --- | --- |
+| [宝马 5 系模型与修复](08_3d_probe/bmw5/README.md) · [宝马街景融合](07_background_replacement/bmw_street/README.md) | GLB、新视角导出、反光修复与同场景对照 |
 | [文档索引](docs/README.md) | 全部说明与目录约定 |
 | [物理方法](docs/01_physics_based.md) · [实验结果](docs/01_physics_results.md) | 成像模型、参数、保真边界与三轮记录 |
 | [Qwen 编辑方法](docs/02_qwen_image_edit.md) | 单图与批次结果、资源消耗、视觉检查 |

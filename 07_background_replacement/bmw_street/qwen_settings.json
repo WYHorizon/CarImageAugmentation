@@ -1,0 +1,40 @@
+{
+  "model": "Qwen-Image-2.1",
+  "model_revision": "d26bb61231c349cf6b7896fa83353113880e1ba3",
+  "prompt": "图1是待完成的汽车实景合成，图2是同一张没有这台前景车的街道原始照片。请以图1的构图为准，把正前方这台深石墨蓝灰色宝马5系自然融入图2的真实街景，做成街头相机拍摄的真实照片。请保留图1里宝马的位置、大小、透视、朝向、轮廓与真实的车型特征，尤其是这代双肾格栅、大灯、机盖线条、轮辋、车标和黄色展示牌，文字和部件位置保持原样。只协调局部光照、边缘和地面阴影。采用街道明亮偏冷的白天光线，在深色车漆和前挡玻璃上形成柔和的宽幅天光及街旁树荫的自然色调，修正过黑或贴纸般的外观。轮胎压在道路平面上，底盘底下有柔和连续的遮蔽阴影和足够深的轮胎接触阴影，投影强度和其他车辆、树木的阴影相符。还原原始街道、白黄车道线、商铺中文招牌、两旁绿树、停放车辆及行人，不移动店铺或修改文字。确保轮胎着地和轮廓清楚，输出单张自然的纪实照片。",
+  "seed": 42,
+  "num_inference_steps": 40,
+  "true_cfg_scale": 1,
+  "use_kv_cache": true,
+  "canvas_mapping": {
+    "original_size": [
+      1080,
+      811
+    ],
+    "canvas_size": [
+      1088,
+      832
+    ],
+    "content_size": [
+      1080,
+      811
+    ],
+    "scale": 1.0,
+    "padding_ltrb": [
+      4,
+      10,
+      4,
+      11
+    ],
+    "content_box_xyxy": [
+      4,
+      10,
+      1084,
+      821
+    ],
+    "resampling": "Pillow LANCZOS",
+    "padding_mode": "edge",
+    "inverse_mapping": "x_original=(x_canvas-left)/scale; y_original=(y_canvas-top)/scale",
+    "output_upscaled_to_original": false
+  }
+}

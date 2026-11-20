@@ -13,3 +13,8 @@ venv/
 .env
 .env.*
 !.env.example
+
+# Local exports duplicated by the original BMW photographs
+/bmw_img.zip
+/bmw_img/*.png
+/08_3d_probe/bmw5/node_modules/

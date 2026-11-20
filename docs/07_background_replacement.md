@@ -10,6 +10,10 @@
 
 实现入口：[单图运行脚本](../07_background_replacement/run.py)、[批次运行脚本](../07_background_replacement/run_batch.py) 与 [报告脚本](../07_background_replacement/build_report.py)。整图与部件对照复用 [Qwen 天气模块的预览函数](../02_qwen_image_edit/run.py)，既有天气及遮挡方法保持独立。
 
+## 新增宝马街景
+
+商铺街和居民街均已用宝马 GLB 渲染与 525Li 环绕帧完成融合。可查看两种来源的原尺寸结果，并复跑商铺街的模型版本。[宝马街景对照与复跑](../07_background_replacement/bmw_street/README.md)
+
 ## 效果与原图对比
 
 以下图片随仓库保存在 `docs/assets/background-replacement/`，可直接在 GitHub 浏览，无需先生成本地 `outputs/`。三张效果总览均为 **2×2**：上排为奥迪 A6L、宝马 4 系，下排为小米 YU7、本田 CR-V。每行两张、保持原比例；可打开大图或下方的 1536×1152 原尺寸成图查看。

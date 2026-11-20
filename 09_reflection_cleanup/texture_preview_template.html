@@ -1,0 +1,180 @@
+<div id="__ROOT_ID__">
+  <style>
+    #__ROOT_ID__ { display: grid; gap: calc(var(--font-size-base) * 1); color: var(--foreground); min-width: 0; }
+    #__ROOT_ID__ .preview-title { padding-inline-end: 90px; min-height: 50px; display: grid; gap: calc(var(--font-size-base) * .25); }
+    #__ROOT_ID__ .model-stage { width: 100%; height: clamp(260px, 55vw, 420px); position: relative; min-width: 0; }
+    #__ROOT_ID__ .model-stage canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+    #__ROOT_ID__ .model-stage canvas.dragging { cursor: grabbing; }
+    #__ROOT_ID__ .angle-fields { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: calc(var(--font-size-base) * 1); }
+    #__ROOT_ID__ .angle-field { display: grid; gap: calc(var(--font-size-base) * .5); min-width: 0; }
+    #__ROOT_ID__ .capture-image { display: block; width: 100%; height: auto; }
+    #__ROOT_ID__ .capture { display: grid; gap: calc(var(--font-size-base) * .5); min-width: 0; }
+    #__ROOT_ID__ [hidden] { display: none; }
+    @media (max-width: 420px) { #__ROOT_ID__ .angle-fields { grid-template-columns: 1fr; } }
+  </style>
+  <div class="preview-title">
+    <h3>__PREVIEW_TITLE__</h3>
+    <span class="text-small text-muted">同一模型 · 同一观察角度</span>
+  </div>
+  <div class="viz-controls">
+    <label class="form-label" for="clean-mode">纹理
+      <select class="form-select" id="clean-mode">
+        __MODE_OPTIONS__
+      </select>
+    </label>
+  </div>
+  <div class="model-stage cursor-interaction" role="img" aria-label="__STAGE_LABEL__"></div>
+  <div class="angle-fields">
+    <div class="angle-field">
+      <label class="form-label" for="clean-yaw">环绕角 <output class="tabular-nums" id="clean-yaw-value">30°</output></label>
+      <input class="form-range" id="clean-yaw" type="range" min="0" max="359" step="1" value="30">
+    </div>
+    <div class="angle-field">
+      <label class="form-label" for="clean-elevation">俯仰 <output class="tabular-nums" id="clean-elevation-value">2°</output></label>
+      <input class="form-range" id="clean-elevation" type="range" min="0" max="45" step="1" value="2">
+    </div>
+  </div>
+  <div class="viz-controls">
+    <button class="btn btn-primary" type="button" id="clean-capture" disabled>生成当前角度图片</button>
+    <span class="text-small text-muted" id="clean-status" role="status" aria-live="polite">加载模型…</span>
+  </div>
+  <div class="capture" hidden>
+    <span class="text-small text-muted" id="clean-capture-label"></span>
+    <img class="capture-image" alt="当前角度的车辆图片">
+  </div>
+  <script type="application/json" id="clean-mesh-data">__PACKED_DATA__</script>
+  <script>__THREE_BUNDLE__</script>
+  <script>
+  (async () => {
+    const root = document.getElementById('__ROOT_ID__');
+    const stage = root.querySelector('.model-stage');
+    const status = root.querySelector('#clean-status');
+    const yawInput = root.querySelector('#clean-yaw');
+    const elevationInput = root.querySelector('#clean-elevation');
+    const yawValue = root.querySelector('#clean-yaw-value');
+    const elevationValue = root.querySelector('#clean-elevation-value');
+    const modeInput = root.querySelector('#clean-mode');
+    const captureButton = root.querySelector('#clean-capture');
+    let scene, renderer, camera, material, groundMaterial;
+    let yaw = 30, elevation = 2, zoom = .8, radius = 1, mode = 'clean';
+    let viewer = {labels:{original:'原 v5 贴图',clean:'轻度去反光'},stateKey:'bmw5_clean_texture',previewId:'bmw5_v5_qwen_mild_texture'};
+    const textures = {};
+    const degrees = Math.PI / 180;
+    const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
+    function applyState(s) {
+      const p = s && s.privateContent && s.privateContent[viewer.stateKey];
+      if (!p) return;
+      if (Number.isFinite(p.yaw)) yaw = ((p.yaw % 360) + 360) % 360;
+      if (Number.isFinite(p.elevation)) elevation = clamp(p.elevation, 0, 45);
+      if (Number.isFinite(p.zoom)) zoom = clamp(p.zoom, .65, 2.4);
+      if (Object.hasOwn(viewer.labels,p.mode)) mode = p.mode;
+    }
+    function saveState() {
+      if (window.openai && window.openai.setWidgetState) {
+        window.openai.setWidgetState({
+          modelContent: { preview: viewer.previewId, texture: mode, azimuth: Math.round(yaw), elevation: Math.round(elevation) },
+          privateContent: { [viewer.stateKey]: { yaw, elevation, zoom, mode } }
+        }).catch(() => {});
+      }
+    }
+    function tokenColor(token) {
+      const swatch = document.createElement('span');
+      swatch.style.color = 'var(' + token + ')'; root.appendChild(swatch);
+      const css = getComputedStyle(swatch).color; swatch.remove();
+      const c = document.createElement('canvas'); c.width = c.height = 1;
+      const ctx = c.getContext('2d'); ctx.fillStyle = css; ctx.fillRect(0, 0, 1, 1);
+      const p = ctx.getImageData(0, 0, 1, 1).data;
+      return new THREE.Color().setRGB(p[0]/255,p[1]/255,p[2]/255,THREE.SRGBColorSpace);
+    }
+    function updateTheme() {
+      if (!renderer) return;
+      const bg = tokenColor('--background');
+      groundMaterial.color.copy(bg).lerp(tokenColor('--foreground'), .06);
+      renderer.setClearColor(bg, 0); render();
+    }
+    function render() {
+      if (!renderer) return;
+      yawInput.value = String(Math.round(yaw)); elevationInput.value = String(Math.round(elevation));
+      yawValue.textContent = Math.round(yaw) + '°'; elevationValue.textContent = Math.round(elevation) + '°';
+      modeInput.value = mode;
+      if (material.map !== textures[mode]) { material.map = textures[mode]; material.needsUpdate = true; }
+      const aspect = camera.aspect;
+      const fit = radius / Math.sin(Math.min(camera.fov*degrees/2,Math.atan(Math.tan(camera.fov*degrees/2)*aspect)));
+      const narrowSafety = 1 + .25 * clamp((1.35-aspect)/.35,0,1);
+      const distance = fit * 1.08 * zoom * narrowSafety;
+      camera.position.set(distance*Math.sin(yaw*degrees)*Math.cos(elevation*degrees),distance*Math.sin(elevation*degrees),distance*Math.cos(yaw*degrees)*Math.cos(elevation*degrees));
+      camera.lookAt(0,0,0); renderer.render(scene,camera);
+    }
+    try {
+      if (!window.THREE) throw new Error('渲染组件未加载');
+      const data = JSON.parse(root.querySelector('#clean-mesh-data').textContent);
+      viewer = data.viewer || viewer; mode = viewer.defaultMode || 'clean';
+      const packed = Uint8Array.from(atob(data.geometry),c=>c.charCodeAt(0));
+      const decompressed = await new Response(new Blob([packed]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+      const words = new Uint16Array(decompressed);
+      const positions = new Float32Array(data.vertexCount*3), uvs = new Float32Array(data.vertexCount*2);
+      for (let i=0;i<positions.length;i++) positions[i]=data.minimum[i%3]+words[i]/65535*data.span[i%3];
+      const uvOffset = positions.length;
+      for (let i=0;i<uvs.length;i++) uvs[i]=words[uvOffset+i]/65535;
+      const index = Array.from(words.subarray(uvOffset+uvs.length));
+      await Promise.all(Object.keys(data.textures).map(async name => {
+        if (!data.textures[name].startsWith('data:image/')) throw new Error('纹理必须内嵌');
+        const im = new Image();
+        await new Promise((resolve,reject)=>{im.onload=resolve;im.onerror=()=>reject(new Error('纹理加载失败'));im.src=data.textures[name];});
+        const texture = new THREE.Texture(im); texture.colorSpace=THREE.SRGBColorSpace;texture.needsUpdate=true;
+        textures[name]=texture;
+      }));
+      scene = new THREE.Scene(); camera = new THREE.PerspectiveCamera(35,1,.01,100);
+      renderer = new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+      renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;
+      stage.appendChild(renderer.domElement);
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
+      geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));geometry.setIndex(index);
+      geometry.computeBoundingBox();const center=geometry.boundingBox.getCenter(new THREE.Vector3());
+      geometry.translate(-center.x,-center.y,-center.z);geometry.computeVertexNormals();
+      geometry.computeBoundingBox();geometry.computeBoundingSphere();radius=geometry.boundingSphere.radius;
+      material = new THREE.MeshBasicMaterial({map:textures[mode],side:THREE.DoubleSide});
+      scene.add(new THREE.Mesh(geometry,material));
+      groundMaterial = new THREE.MeshBasicMaterial({side:THREE.DoubleSide});
+      const ground = new THREE.Mesh(new THREE.PlaneGeometry(radius*4,radius*4),groundMaterial);
+      ground.rotation.x=-Math.PI/2;ground.position.y=geometry.boundingBox.min.y-radius*.015;scene.add(ground);
+      applyState(window.openai&&window.openai.widgetState);updateTheme();
+      const resize=()=>{const width=Math.max(1,stage.clientWidth),height=Math.max(1,stage.clientHeight);renderer.setSize(width,height,false);camera.aspect=width/height;camera.updateProjectionMatrix();render();};
+      new ResizeObserver(resize).observe(stage);resize();
+      const canvas=renderer.domElement;let dragging=false,lastX=0,lastY=0;
+      canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;dragging=true;lastX=e.clientX;lastY=e.clientY;canvas.classList.add('dragging');canvas.setPointerCapture(e.pointerId);});
+      canvas.addEventListener('pointermove',e=>{if(!dragging)return;yaw=(yaw-(e.clientX-lastX)*.45+360)%360;elevation=clamp(elevation+(e.clientY-lastY)*.3,0,45);lastX=e.clientX;lastY=e.clientY;render();});
+      const finish=()=>{if(dragging){dragging=false;canvas.classList.remove('dragging');saveState();}};
+      ['pointerup','pointercancel','lostpointercapture'].forEach(event=>canvas.addEventListener(event,finish));
+      let wheelTimer;
+      canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=clamp(zoom*Math.exp(e.deltaY*.001),.65,2.4);render();clearTimeout(wheelTimer);wheelTimer=setTimeout(saveState,200);},{passive:false});
+      yawInput.addEventListener('input',()=>{yaw=Number(yawInput.value);render();});
+      elevationInput.addEventListener('input',()=>{elevation=Number(elevationInput.value);render();});
+      yawInput.addEventListener('change',saveState);elevationInput.addEventListener('change',saveState);
+      modeInput.addEventListener('change',()=>{mode=modeInput.value;render();saveState();});
+      captureButton.disabled=false;
+      captureButton.addEventListener('click',()=>{
+        const originalSize=renderer.getSize(new THREE.Vector2()),originalRatio=renderer.getPixelRatio(),originalAspect=camera.aspect;
+        try {
+          renderer.setPixelRatio(1);renderer.setSize(1200,900,false);camera.aspect=4/3;camera.updateProjectionMatrix();
+          renderer.setClearAlpha(1);render();root.querySelector('.capture-image').src=canvas.toDataURL('image/png');
+          root.querySelector('#clean-capture-label').textContent=viewer.labels[mode]+' · 1200 × 900 · '+Math.round(yaw)+'° / '+Math.round(elevation)+'°';
+          root.querySelector('.capture').hidden=false;status.textContent='当前角度图片已生成';
+        } catch(e){status.textContent='图片生成失败：'+e.message;}
+        finally {renderer.setClearAlpha(0);renderer.setPixelRatio(originalRatio);renderer.setSize(originalSize.x,originalSize.y,false);camera.aspect=originalAspect;camera.updateProjectionMatrix();render();}
+      });
+      window.addEventListener('openai:set_globals',e=>{const globals=e.detail&&e.detail.globals;if(globals&&globals.widgetState){applyState(globals.widgetState);render();}updateTheme();});
+      new MutationObserver(updateTheme).observe(document.documentElement,{attributes:true,attributeFilter:['class','style','data-theme']});
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',updateTheme);
+      window.__texturePreview = {
+        getState: () => ({mode,yaw,elevation,zoom}),
+        getCamera: () => ({position:camera.position.toArray(),fov:camera.fov,aspect:camera.aspect}),
+        metrics: {vertexCount:data.vertexCount,faceCount:data.faceCount,modes:Object.keys(textures)}
+      };
+      status.textContent='拖拽旋转 · 滚轮缩放';
+    } catch(e){status.textContent=e.message;status.setAttribute('role','alert');}
+  })();
+  </script>
+</div>

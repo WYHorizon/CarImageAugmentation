@@ -1,0 +1,24 @@
+{
+  "base_glb_sha256": "cd97ff5b0e04378317067e80f340faf0ec35c226555414d302d3b42a184a8194",
+  "glb_sha256": "5b47e4d438b856f59aee020da14d75f79bd410d3b2309feb5732ecd2571e6d02",
+  "input_chart_sha256": "bc080b01157f3d16912d6d16dce3cb59dbba6c445ea1ece4f48c0760f697de8b",
+  "body_texture_only_changed": true,
+  "geometry_and_all_other_buffers_exact": true,
+  "unmodified_glass_texels_exact": true,
+  "outside_lid_shoulders_and_padding_exact": true,
+  "body_shutlines_protected_separate_chart_regions": true,
+  "changed_valid_texels": 31753,
+  "changed_padding": 12845,
+  "selected_surface_xyz_bounds": [
+    [
+      -0.2641940712928772,
+      0.08078871667385101,
+      -0.9696168899536133
+    ],
+    [
+      0.2586648464202881,
+      0.13750819861888885,
+      -0.7745698690414429
+    ]
+  ]
+}

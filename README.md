@@ -205,6 +205,10 @@ Qwen 当前未接入 ControlNet，场景配置中的部件区域用于裁剪对�
 
 [![最终宝马 5 系模型在前侧 32°、侧面 90° 和后侧 148° 的渲染](docs/assets/bmw5/three-views.jpg)](docs/assets/bmw5/three-views.jpg)
 
+**360° 水平环绕。** 镜头仰角固定为 8°，从前侧绕车一周，每 7.2 秒循环一次。
+
+[![宝马 5 系发布模型的水平旋转动图](docs/assets/bmw5/horizontal-orbit.webp)](docs/assets/bmw5/horizontal-orbit.webp)
+
 #### 六个街景的选图与融合结果
 
 每个场景的上行是融合前的车辆，下行是对应成图。左边用 **Three.js** 从同一个 GLB 按场景机位渲染，角度以车头为 0°、车尾为 180°，正负号区分车身两侧。右边来自另一组宝马 525Li 碳黑色环绕照片，可以点击缩略图查看所选原帧。
